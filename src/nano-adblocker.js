@@ -40,7 +40,7 @@ exports.buildCore = async (browser) => {
     });
 
     if (browser === "firefox") {
-        await smartBuild.copyDirectory("../NanoCore/platform/webext", outputPath + "/js");
+        await smartBuild.copyDirectory("../NanoCore/platform/webext", outputPath + "/js"); // TODO: This doesn't always work, might have to unconditionally copy the directory
     } else if (browser === "edge") {
         await Promise.all([
             smartBuild.copyDirectory("../NanoCore/platform/edge", outputPath + "/js"),
