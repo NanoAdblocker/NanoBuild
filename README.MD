@@ -4,6 +4,10 @@ Centralized build engine
 
 ## Usage
 
+Depending on what is being built, these repositories may be required to be in
+the same parent directory: `NanoCore`, `NanoFilters`, `NanoDefender`,
+`uBlockProtector`, `Edgyfy`, `uBlock`, `uAssets`.
+
 ```Bash
 node . <action> [<target>] [--upstream] [--pack] [--publish] [--trace-fs]
 

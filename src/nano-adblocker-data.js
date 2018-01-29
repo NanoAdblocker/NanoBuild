@@ -15,7 +15,9 @@ const assert = require("assert");
  * @param {Enum} browser - One of "chromium", "firefox", "edge".
  * @return {string} The manifest
  */
-module.exports = (browser) => {
+exports.manifest = (browser) => {
+    assert(browser === "chromium" || browser === "firefox" || browser === "edge");
+
     let manifest = {
         "manifest_version": 2,
 
@@ -111,9 +113,22 @@ module.exports = (browser) => {
             }
         };
 
+        // TODO 2018-01-13: The side bar feels really quirky,
+        // disable it until it gets better
+        /*
+        manifest.sidebar_action = {
+            "default_title": "__MSG_statsPageName__",
+            "default_panel": "logger-ui.html",
+            "default_icon": {
+                "128": "img/128_on.png"
+            }
+        };
+        */
+
         return JSON.stringify(manifest, null, 2);
     } else if (browser === "edge") {
-        // Edge does not care if the size is actually right but do care if the key name is right
+        // Edge does not care if the size is actually right
+        // but do care if the key name is right
         manifest.icons = {
             "16": "img/128_on.png",
             "128": "img/128_on.png"
@@ -132,9 +147,16 @@ module.exports = (browser) => {
                 "browser_action_next_to_addressbar": true
             }
         };
+        manifest["-ms-preload"] = {
+            "backgroundScript": "js/edgyfy.js",
+            "contentScript": "js/edgyfy.js"
+        };
 
         return JSON.stringify(manifest, null, 2);
-    } else {
-        assert(false);
     }
 };
+/**
+ * The based on string.
+ * @const {string}
+ */
+exports.basedOn = "uBlock Origin Version/1.14.25.101+2 Commit/dada3fe Sidebar/disabled";

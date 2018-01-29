@@ -10,6 +10,7 @@
  */
 const assert = require("assert");
 const del = require("del");
+const nanoAdblocker = require("./src/nano-adblocker.js");
 
 
 (async () => {
@@ -94,13 +95,29 @@ const del = require("del");
     if (publish === null) {
         publish = false;
     }
+    if (publish) {
+        pack = true;
+    }
 
     switch (action) {
         case "clean":
             await del("./build");
             return;
 
-        case "chromium":
+        default:
+            await nanoAdblocker.buildCore(action, upstream);
+            await nanoAdblocker.buildFilter(action, upstream);
+            await nanoAdblocker.buildLocale(action, upstream);
             break;
+    }
+
+    if (pack) {
+        //todo validate build result (parse js, json)
+        //todo pack
+    }
+
+    if (publish) {
+        //todo find credentials
+        //todo publish
     }
 })();
