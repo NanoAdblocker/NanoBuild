@@ -1,0 +1,20 @@
+{
+  "author": "jspenguin2017",
+  "bugs": {
+    "url": "https://github.com/NanoAdblocker/NanoBuild/issues"
+  },
+  "dependencies": {
+    "archiver": "~2.1.1",
+    "esprima": "~4.0.0"
+  },
+  "description": "Centralized build engine",
+  "engines": {
+    "node": ">=9.2.0"
+  },
+  "homepage": "https://github.com/NanoAdblocker/NanoBuild",
+  "license": "GPL-3.0",
+  "name": "nano-build",
+  "private": true,
+  "repository": "https://github.com/NanoAdblocker/NanoBuild",
+  "version": "1.0.0"
+}
