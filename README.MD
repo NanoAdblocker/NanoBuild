@@ -3,6 +3,7 @@
 The one and only build center
 
 The automated build center with streamlined build, test, and publish.
+Requires latest current branch of [Node.js](https://nodejs.org/en/).
 
 ## Usage
 
