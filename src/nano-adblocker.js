@@ -7,8 +7,10 @@
  * Load modules.
  * @const {Module}
  */
-const smartBuild = require("../lib/smart-build.js");
+const assert = require("assert");
 const data = require("./nano-adblocker-data.js");
+const fs = require("../lib/promise-fs.js");
+const smartBuild = require("../lib/smart-build.js");
 
 /**
  * Build Nano Adblocker core.
@@ -54,14 +56,14 @@ exports.buildCore = async (browser) => {
 exports.buildFilter = async (browser) => {
     assert(browser === "chromium" || browser === "firefox" || browser === "edge");
 
-    outputPath += "./dist/nano_adblocker_" + browser + "/assets";
+    let outputPath = "./dist/nano_adblocker_" + browser + "/assets";
     await smartBuild.createDirectory(outputPath);
 
     await Promise.all([
-        smartCopyFile("../NanoCore/assets/assets.json", outputPath + "/assets.json"),
-        smartCopyDirectory("../NanoFilters/NanoFilters", outputPath + "/NanoFilters"),
+        smartBuild.copyFile("../NanoCore/assets/assets.json", outputPath + "/assets.json"),
+        smartBuild.copyDirectory("../NanoFilters/NanoFilters", outputPath + "/NanoFilters"),
     ]);
-    await smartCopyDirectory("../NanoFilters/ThirdParty", outputPath + "/ThirdParty");
+    await smartBuild.copyDirectory("../NanoFilters/ThirdParty", outputPath + "/ThirdParty");
 };
 /**
  * Build locale files, requires the core to be already built.
@@ -71,7 +73,7 @@ exports.buildFilter = async (browser) => {
 exports.buildLocale = async (browser) => {
     assert(browser === "chromium" || browser === "firefox" || browser === "edge");
 
-    outputPath += "./dist/nano_adblocker_" + browser + "/_locales";
+    let outputPath = "./dist/nano_adblocker_" + browser + "/_locales";
     await smartBuild.createDirectory(outputPath);
 
     let allKeys = [];
@@ -105,7 +107,7 @@ exports.buildLocale = async (browser) => {
     }
 
     const processOne = async (lang, hasExtra) => {
-        await createDirectory(outputPath + "/" + lang);
+        await smartBuild.createDirectory(outputPath + "/" + lang);
 
         let original, extra;
         if (hasExtra) {
