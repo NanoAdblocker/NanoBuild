@@ -101,7 +101,7 @@ const nanoAdblocker = require("./src/nano-adblocker.js");
 
     switch (action) {
         case "clean":
-            await del("./build");
+            await del("./dist");
             return;
 
         default:
