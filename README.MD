@@ -1,4 +1,4 @@
-# Nano Build
+# Nano Build [![Dependencies](https://david-dm.org/NanoAdblocker/NanoBuild.svg)](https://david-dm.org/NanoAdblocker/NanoBuild)
 
 The one and only build center
 
