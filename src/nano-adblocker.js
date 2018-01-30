@@ -35,15 +35,16 @@ exports.buildCore = async (browser) => {
         smartBuild.copyDirectory("../NanoCore/platform/chromium/other", outputPath),
         smartBuild.copyFile("../NanoCore/LICENSE", outputPath + "/LICENSE"),
     ]);
-    await smartBuild.buildFile(["./src/nano-adblocker-data.js"], outputPath + "/manifest.json", async () => {
-        await fs.writeFile(outputPath + "/manifest.json", data.manifest(browser), "utf8");
-    });
+    // TODO: Uncommand when upstream is ready for new build system
+    //await smartBuild.buildFile(["./src/nano-adblocker-data.js"], outputPath + "/manifest.json", async () => {
+    await fs.writeFile(outputPath + "/manifest.json", data.manifest(browser), "utf8");
+    //});
 
     if (browser === "firefox") {
-        await smartBuild.copyDirectory("../NanoCore/platform/webext", outputPath + "/js"); // TODO: This doesn't always work, might have to unconditionally copy the directory
+        await smartBuild.copyDirectory("../NanoCore/platform/webext", outputPath + "/js", false, true);
     } else if (browser === "edge") {
         await Promise.all([
-            smartBuild.copyDirectory("../NanoCore/platform/edge", outputPath + "/js"),
+            smartBuild.copyDirectory("../NanoCore/platform/edge", outputPath + "/js", false, true),
             smartBuild.copyFile("../Edgyfy/edgyfy.js", outputPath + "/js"),
         ]);
     }
