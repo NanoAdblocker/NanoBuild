@@ -30,7 +30,7 @@ exports.manifest = (browser) => {
         "short_name": "Nano",
         "description": "Just another adblocker",
         "author": "All Nano Adblocker and uBlock Origin contributors",
-        "version": "1.0.0.28",
+        "version": "1.0.0.29",
 
         "default_locale": "en",
 
@@ -119,7 +119,7 @@ exports.manifest = (browser) => {
         };
 
         // TODO 2018-01-13: The side bar feels really quirky,
-        // disable it until it gets better
+        // disable it for now
         /*
         manifest.sidebar_action = {
             "default_title": "__MSG_statsPageName__",

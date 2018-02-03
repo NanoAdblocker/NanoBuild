@@ -99,16 +99,21 @@ const nanoAdblocker = require("./src/nano-adblocker.js");
         pack = true;
     }
 
-    switch (action) {
-        case "clean":
-            await del("./dist");
-            return;
-
-        default:
+    if (action === "clean") {
+        await del("./dist");
+        return;
+    } else {
+        if (target === "both" || target === "adblocker") {
             await nanoAdblocker.buildCore(action, upstream);
             await nanoAdblocker.buildFilter(action, upstream);
             await nanoAdblocker.buildLocale(action, upstream);
-            break;
+        }
+        if (target === "both" || target === "defender") {
+            //todo
+        }
+        if (target === "ubo") {
+            //todo
+        }
     }
 
     if (pack) {

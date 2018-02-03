@@ -32,7 +32,7 @@ exports.buildCore = async (browser) => {
     await smartBuild.copyDirectory("../NanoCore/src", outputPath, false);
     await smartBuild.copyDirectory("../NanoCore/platform/chromium", outputPath + "/js", false);
     await Promise.all([
-        smartBuild.copyDirectory("../NanoCore/platform/chromium/other", outputPath),
+        smartBuild.copyDirectory("../NanoCore/platform/chromium/other", outputPath, false),
         smartBuild.copyFile("../NanoCore/LICENSE", outputPath + "/LICENSE"),
     ]);
     // TODO: Uncommand when upstream is ready for new build system
