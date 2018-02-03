@@ -13,7 +13,7 @@ const assert = require("assert");
  * The based on string.
  * @const {string}
  */
-exports.basedOn = "uBlock Origin Version/1.15.0.0+1 Commit/7f9435f Sidebar/disabled";
+exports.basedOn = "uBlock Origin Version/1.15.4 Commit/43eab7a Sidebar/disabled";
 /**
  * Generate manifest.
  * @function
