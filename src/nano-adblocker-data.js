@@ -10,6 +10,11 @@
 const assert = require("assert");
 
 /**
+ * The based on string.
+ * @const {string}
+ */
+exports.basedOn = "uBlock Origin Version/1.15.0.0+1 Commit/7f9435f Sidebar/disabled";
+/**
  * Generate manifest.
  * @function
  * @param {Enum} browser - One of "chromium", "firefox", "edge".
@@ -155,8 +160,3 @@ exports.manifest = (browser) => {
         return JSON.stringify(manifest, null, 2);
     }
 };
-/**
- * The based on string.
- * @const {string}
- */
-exports.basedOn = "uBlock Origin Version/1.14.25.101+2 Commit/dada3fe Sidebar/disabled";
