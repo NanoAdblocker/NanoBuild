@@ -9,7 +9,9 @@ Requires latest current branch of [Node.js](https://nodejs.org/en/).
 
 Depending on what is being built, these repositories may be required to be in
 the same parent directory: `NanoCore`, `NanoFilters`, `NanoDefender`,
-`Edgyfy`, `uBlockProtector`, `uBlock`, `uAssets`.
+`uBlockProtector`, `uBO-Extra`, `Edgyfy`, `uBlock`, `uAssets`.
+
+The private repository `Prototype` is required for publishing.
 
 ```
 node . <action> [<target>] [--upstream] [--pack] [--publish] [--trace-fs]
