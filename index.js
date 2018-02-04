@@ -114,12 +114,12 @@ const nanoAdblocker = require("./src/nano-adblocker.js");
 
         if (target === "both" || target === "defender") {
             // TODO
-            console.error("NOT IMPLEMENTED");
+            console.error("Nano Defender building is NOT yet implemented");
         }
 
         if (target === "ubo") {
             // TODO
-            console.error("NOT IMPLEMENTED");
+            console.error("uBlock Origin Edge building is NOT yet implemented");
         }
     }
 })();
