@@ -8,8 +8,10 @@
  * @const {Module}
  */
 const assert = require("assert");
+const checkSyntax = require("../lib/check-syntax.js");
 const data = require("./nano-adblocker-data.js");
 const fs = require("../lib/promise-fs.js");
+const makeArchive = require("../lib/make-archive.js");
 const smartBuild = require("../lib/smart-build.js");
 
 /**
@@ -18,6 +20,7 @@ const smartBuild = require("../lib/smart-build.js");
  * @param {Enum} browser - One of "chromium", "firefox", "edge".
  */
 exports.buildCore = async (browser) => {
+    console.log("Building Nano Adblocker Core...");
     assert(browser === "chromium" || browser === "firefox" || browser === "edge");
 
     let outputPath = "./dist";
@@ -55,9 +58,10 @@ exports.buildCore = async (browser) => {
  * @param {Enum} browser - One of "chromium", "firefox", "edge".
  */
 exports.buildFilter = async (browser) => {
+    console.log("Building Nano Adblocker Assets...");
     assert(browser === "chromium" || browser === "firefox" || browser === "edge");
 
-    let outputPath = "./dist/nano_adblocker_" + browser + "/assets";
+    const outputPath = "./dist/nano_adblocker_" + browser + "/assets";
     await smartBuild.createDirectory(outputPath);
 
     await Promise.all([
@@ -72,9 +76,10 @@ exports.buildFilter = async (browser) => {
  * @param {Enum} browser - One of "chromium", "firefox", "edge".
  */
 exports.buildLocale = async (browser) => {
+    console.log("Building Nano Adblocker Locale...");
     assert(browser === "chromium" || browser === "firefox" || browser === "edge");
 
-    let outputPath = "./dist/nano_adblocker_" + browser + "/_locales";
+    const outputPath = "./dist/nano_adblocker_" + browser + "/_locales";
     await smartBuild.createDirectory(outputPath);
 
     let allKeys = [];
@@ -186,4 +191,30 @@ exports.buildLocale = async (browser) => {
     if (browser === "chromium") {
         await smartBuild.copyDirectory(outputPath + "/nb", outputPath + "/no");
     }
+};
+
+/**
+ * Test the build package.
+ * @async @function
+ * @param {Enum} browser - One of "chromium", "firefox", "edge".
+ */
+exports.test = async (browser) => {
+    console.log("Testing Nano Adblocker...");
+    assert(browser === "chromium" || browser === "firefox" || browser === "edge");
+
+    const inputPath = "./dist/nano_adblocker_" + browser;
+    await checkSyntax.validateDirectory(inputPath);
+};
+/**
+ * Create zip package.
+ * @async @function
+ * @param {Enum} browser - One of "chromium", "firefox", "edge".
+ */
+exports.pack = async (browser) => {
+    console.log("Packaging Nano Adblocker...");
+    assert(browser === "chromium" || browser === "firefox" || browser === "edge");
+
+    const inputPath = "./dist/nano_adblocker_" + browser;
+    const outputPath = "./dist/nano_adblocker_" + browser + ".zip";
+    makeArchive.zip(inputPath, outputPath);
 };
