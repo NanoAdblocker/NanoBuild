@@ -33,5 +33,5 @@ node . <action> [<target>] [--upstream] [--pack] [--publish] [--trace-fs]
 --upstream        Prefer upstream repository
 --pack            Create .zip packages
 --publish         Publish build packages, implicitly apply "--pack"
---trace-fs        Log file system access
+--trace-fs        Log file system access, excludes streams and access from other NPM packages
 ```
