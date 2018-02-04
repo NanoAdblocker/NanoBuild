@@ -13,6 +13,7 @@ const data = require("./nano-adblocker-data.js");
 const fs = require("../lib/promise-fs.js");
 const makeArchive = require("../lib/make-archive.js");
 const smartBuild = require("../lib/smart-build.js");
+const webStore = require("../lib/web-store.js");
 
 /**
  * Build Nano Adblocker core.
@@ -216,4 +217,19 @@ exports.pack = async (browser) => {
     const inputPath = "./dist/nano_adblocker_" + browser;
     const outputPath = "./dist/nano_adblocker_" + browser + ".zip";
     await makeArchive.zip(inputPath, outputPath);
+};
+/**
+ * Publish package to extension store.
+ * @async @function
+ * @param {Enum} browser - One of "chromium".
+ */
+exports.publish = async (browser) => {
+    console.log("Publishing Nano Adblocker...");
+    assert(browser === "chromium");
+
+    const inputPath = "./dist/nano_adblocker_" + browser + ".zip";
+
+    if (browser === "chromium") {
+        await webStore.publish(inputPath, "gabbbocakeomblphkmmnoamkioajlkfo");
+    }
 };
