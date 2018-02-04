@@ -5,6 +5,10 @@ The one and only build center
 The automated build center with streamlined build, test, and publish.
 Requires latest current branch of [Node.js](https://nodejs.org/en/).
 
+Although the build engine will read credentials from environment variables, 
+it is not safe to be used in a continuous integration server where the output 
+console is publicly viewable.
+
 ## Usage
 
 Depending on what is being built, these repositories may be required to be in
