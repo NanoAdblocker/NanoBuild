@@ -47,7 +47,7 @@ exports.buildCore = async (browser) => {
     } else if (browser === "edge") {
         await Promise.all([
             smartBuild.copyDirectory("../NanoCore/platform/edge", outputPath + "/js", false, true),
-            smartBuild.copyFile("../Edgyfy/edgyfy.js", outputPath + "/js"),
+            smartBuild.copyFile("../Edgyfy/edgyfy.js", outputPath + "/js/edgyfy.js"),
         ]);
     }
 };
