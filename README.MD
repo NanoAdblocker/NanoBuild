@@ -1,13 +1,13 @@
 # Nano Build [![Dependencies](https://david-dm.org/NanoAdblocker/NanoBuild.svg)](https://david-dm.org/NanoAdblocker/NanoBuild)
 
-The one and only build center
+The centralized build center
 
 The automated build center with streamlined build, test, and publish.
 Requires latest current branch of [Node.js](https://nodejs.org/en/).
 
-Although the build engine will read credentials from environment variables, 
-it is not safe to be used in a continuous integration server where the output 
-console is publicly viewable.
+Although the build engine reads credentials from environment variables, it is
+not safe to be used in a continuous integration server where the output console
+is publicly viewable.
 
 ## Usage
 
