@@ -38,10 +38,9 @@ exports.buildCore = async (browser) => {
         smartBuild.copyDirectory("../NanoCore/platform/chromium/other", outputPath, false),
         smartBuild.copyFile("../NanoCore/LICENSE", outputPath + "/LICENSE"),
     ]);
-    // TODO: Uncommand when upstream is ready for new build system
-    //await smartBuild.buildFile(["./src/nano-adblocker-data.js"], outputPath + "/manifest.json", async () => {
-    await fs.writeFile(outputPath + "/manifest.json", data.manifest(browser), "utf8");
-    //});
+    await smartBuild.buildFile(["./src/nano-adblocker-data.js"], outputPath + "/manifest.json", async () => {
+        await fs.writeFile(outputPath + "/manifest.json", data.manifest(browser), "utf8");
+    });
 
     if (browser === "firefox") {
         await smartBuild.copyDirectory("../NanoCore/platform/webext", outputPath + "/js", false, true);
@@ -216,5 +215,5 @@ exports.pack = async (browser) => {
 
     const inputPath = "./dist/nano_adblocker_" + browser;
     const outputPath = "./dist/nano_adblocker_" + browser + ".zip";
-    makeArchive.zip(inputPath, outputPath);
+    await makeArchive.zip(inputPath, outputPath);
 };

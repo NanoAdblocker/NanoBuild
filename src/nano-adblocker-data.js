@@ -99,9 +99,7 @@ exports.manifest = (browser) => {
         "minimum_chrome_version": "45.0"
     };
 
-    if (browser === "chromium") {
-        return JSON.stringify(manifest, null, 2);
-    } else if (browser === "firefox") {
+    if (browser === "firefox") {
         delete manifest.options_page;
         manifest.options_ui = {
             "open_in_tab": true,
@@ -129,8 +127,6 @@ exports.manifest = (browser) => {
             }
         };
         */
-
-        return JSON.stringify(manifest, null, 2);
     } else if (browser === "edge") {
         // Edge does not care if the size is actually right
         // but do care if the key name is right
@@ -156,7 +152,7 @@ exports.manifest = (browser) => {
             "backgroundScript": "js/edgyfy.js",
             "contentScript": "js/edgyfy.js"
         };
-
-        return JSON.stringify(manifest, null, 2);
     }
+
+    return JSON.stringify(manifest, null, 2);
 };
