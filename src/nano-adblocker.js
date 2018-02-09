@@ -7,6 +7,7 @@
  * Load modules.
  * @const {Module}
  */
+const addonsServer = require("../lib/addons-server.js");
 const assert = require("assert");
 const checkSyntax = require("../lib/check-syntax.js");
 const data = require("./nano-adblocker-data.js");
@@ -225,11 +226,13 @@ exports.pack = async (browser) => {
  */
 exports.publish = async (browser) => {
     console.log("Publishing Nano Adblocker...");
-    assert(browser === "chromium");
+    assert(browser === "chromium" || browser === "firefox");
 
     const inputPath = "./dist/nano_adblocker_" + browser + ".zip";
 
     if (browser === "chromium") {
-        await webStore.publish(inputPath, "gabbbocakeomblphkmmnoamkioajlkfo");
+        await webStore.publish(inputPath, data.chrome.id);
+    } else if (browser === "firefox") {
+        await addonsServer.publish(inputPath, data.version, data.firefox.id, "./dist/");
     }
 };

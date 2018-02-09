@@ -6,7 +6,8 @@
   "dependencies": {
     "archiver": "~2.1.1",
     "del": "~3.0.0",
-    "esprima": "~4.0.0"
+    "esprima": "~4.0.0",
+    "sign-addon": "~0.2.2"
   },
   "description": "Centralized build engine",
   "engines": {

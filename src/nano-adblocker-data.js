@@ -19,6 +19,14 @@ exports.basedOn = "uBlock Origin Version/1.15.4 Commit/43eab7a Sidebar/disabled"
  * @const {string}
  */
 exports.version = "1.0.0.29";
+
+/**
+ * Extra information specific to Chrome.
+ * @const {Object}
+ */
+exports.chrome = {
+    id: "gabbbocakeomblphkmmnoamkioajlkfo",
+};
 /**
  * Extra information specific to Firefox.
  * @const {Object}
@@ -26,6 +34,7 @@ exports.version = "1.0.0.29";
 exports.firefox = {
     id: "{acf5b849-adb0-4004-b4ff-7f5332f48567}",
 };
+
 /**
  * Generate manifest.
  * @function
@@ -124,7 +133,7 @@ exports.manifest = (browser) => {
 
         manifest.applications = {
             "gecko": {
-                "id": exports.firefox.id;
+                "id": exports.firefox.id,
                 "strict_min_version": "52.0"
             }
         };
