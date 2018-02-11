@@ -18,7 +18,7 @@ exports.basedOn = "uBlock Origin Version/1.15.4 Commit/43eab7a Sidebar/disabled"
  * The version key.
  * @const {string}
  */
-exports.version = "1.0.0.29";
+exports.version = "1.0.0.30";
 
 /**
  * Extra information specific to Chrome.
