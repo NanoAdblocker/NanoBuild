@@ -13,12 +13,12 @@ const assert = require("assert");
  * The based on string.
  * @const {string}
  */
-exports.basedOn = "uBlock Origin Version/1.15.4 Commit/43eab7a Sidebar/disabled";
+exports.basedOn = "uBlock Origin Version/1.15.6 Commit/aadcfcd Sidebar/disabled";
 /**
  * The version key.
  * @const {string}
  */
-exports.version = "1.0.0.30";
+exports.version = "1.0.0.31";
 
 /**
  * Extra information specific to Chrome.
