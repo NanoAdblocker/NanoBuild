@@ -112,6 +112,9 @@ exports.manifest = (browser) => {
             "webRequestBlocking",
             "<all_urls>"
         ],
+        "web_accessible_resources": [
+            "/web_accessible_resources/*"
+        ],
 
         "incognito": "split",
         "storage": {

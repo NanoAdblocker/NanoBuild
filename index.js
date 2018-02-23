@@ -102,7 +102,9 @@ const nanoAdblocker = require("./src/nano-adblocker.js");
         if (target === "both" || target === "adblocker") {
             await nanoAdblocker.buildCore(action, upstream);
             await nanoAdblocker.buildFilter(action, upstream);
+            await nanoAdblocker.buildResources(action, upstream);
             await nanoAdblocker.buildLocale(action, upstream);
+
             if (pack || publish) {
                 await nanoAdblocker.test(action, upstream);
                 await nanoAdblocker.pack(action, upstream);

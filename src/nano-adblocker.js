@@ -72,6 +72,31 @@ exports.buildFilter = async (browser) => {
     await smartBuild.copyDirectory("../NanoFilters/ThirdParty", outputPath + "/ThirdParty");
 };
 /**
+ * Build web accessible resources directory.
+ * @async @function
+ * @param {Enum} browser - One of "chromium", "firefox", "edge".
+ */
+exports.buildResources = async (browser) => {
+    console.log("Building Nano Adblocker Resources...");
+    assert(browser === "chromium" || browser === "firefox" || browser === "edge");
+
+    const metaFile = "../NanoCore/src/web_accessible_resources/to-import.txt";
+    const outputPath = "./dist/nano_adblocker_" + browser + "/web_accessible_resources";
+    await smartBuild.createDirectory(outputPath);
+
+    const processOne = async (key, mime, content) => {
+
+    };
+    const processAll = async () => {
+
+    };
+
+    await smartBuild.buildFile([
+        "../NanoCore/src/web_accessible_resources/imported.txt",
+        metaFile,
+    ], outputPath + "/imported.txt", processAll);
+};
+/**
  * Build locale files, requires the core to be already built.
  * @async @function
  * @param {Enum} browser - One of "chromium", "firefox", "edge".
