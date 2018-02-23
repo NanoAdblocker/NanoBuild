@@ -11,8 +11,10 @@ const addonsServer = require("../lib/addons-server.js");
 const assert = require("assert");
 const checkSyntax = require("../lib/check-syntax.js");
 const data = require("./nano-adblocker-data.js");
+const forge = require("node-forge");
 const fs = require("../lib/promise-fs.js");
 const makeArchive = require("../lib/make-archive.js");
+const ofs = require("fs");
 const smartBuild = require("../lib/smart-build.js");
 const webStore = require("../lib/web-store.js");
 
@@ -81,20 +83,132 @@ exports.buildResources = async (browser) => {
     assert(browser === "chromium" || browser === "firefox" || browser === "edge");
 
     const metaFile = "../NanoCore/src/web_accessible_resources/to-import.txt";
+    const recordFile = "../NanoCore/src/web_accessible_resources/imported.txt";
+    const buildRecordFile = outputPath + "/imported.txt";
+
     const outputPath = "./dist/nano_adblocker_" + browser + "/web_accessible_resources";
     await smartBuild.createDirectory(outputPath);
 
-    const processOne = async (key, mime, content) => {
+    const parseOneDatabase = (data) => {
+        const reNonEmptyLine = /\S/;
+        const reSplitFields = /\s+/;
 
+        data = data.split("\n");
+
+        let fields = null;
+        let encoded = null;
+        let database = {};
+        const registerEntry = () => {
+            const [name, mime] = fields.splice(0, 2);
+            let content;
+            if (encoded) {
+                content = fields.join("");
+            } else {
+                content = fields.join("\n");
+            }
+
+            database[name] = {
+                mime: mime,
+                content: content,
+            };
+
+            fields = null;
+            encoded = null;
+        };
+
+        for (let line of data) {
+            if (line.startsWith("#")) {
+                continue;
+            }
+
+            if (fields === undefined) {
+                fields = line.trim().split(reSplitFields);
+                assert(fields.length === 2);
+                encoded = fields[1].includes(";");
+                continue;
+            }
+
+            if (reNonEmptyLine.test(line)) {
+                if (encoded) {
+                    fields.push(line.trim());
+                } else {
+                    fields.push(line);
+                }
+                continue;
+            }
+
+            registerEntry();
+        }
+        if (fields) {
+            registerEntry();
+        }
+
+        return database;
+    };
+
+    const processOne = async (name, dbEnry, recordStream) => {
+        const reExtractMime = /^[^/]+\/([^\s;]+)/;
+
+        recordStream.write(name);
+        recordStream.write("\n");
+
+        const md5 = forge.md.md5.create();
+        md5.update(name);
+        name = md.digest().toHex();
+
+        let suffix = reExtractMime.exec(dbEntry.mime);
+        assert(suffix);
+        name += "." + suffix[1];
+
+        recordStream.write(name);
+        recordStream.write("\n");
+
+        const isBinay = dbEntry.mime.endsWith(";base64");
+        if (isBinay) {
+            await fs.writeFile(outputPath + "/" + name, Buffer.from(dbEntry.content, "base64"), "binary");
+        } else {
+            await fs.writeFile(outputPath + "/" + name, dbEntry.content, "utf8");
+        }
     };
     const processAll = async () => {
+        let data = await fs.readFile(metaFile, "utf8");
+        data = data.split("\n");
+        let toImport = [];
+        for (let d of data) {
+            d = d.trim();
+            if (!d.startsWith("#")) {
+                toImport.push(d);
+            }
+        }
 
+        let [ublock, nano] = await Promise.all([
+            fs.readFile("../NanoFilters/ThirdParty/uBlockResources.txt", "utf8"),
+            fs.readFile("../NanoFilters/NanoFilters/NanoResources.txt", "utf8"),
+        ]);
+        ublock = parseOneDatabase(ublock);
+        nano = parseOneDatabase(nano);
+
+        await fs.copyFile(recordFile, buildRecordFile);
+        let recordStream = ofs.createWriteStream(buildRecordFile, {
+            flags: "a",
+            encoding: "utf8",
+        });
+
+        for (let file of toImport) {
+            if (file in nano) {
+                await processOne(file, nano[file], recordStream);
+            } else if (file in ublock) {
+                await processOne(file, ublock[file], recordStream);
+            } else {
+                assert(false);
+            }
+        }
+
+        recordStream.write("\n");
+        recordStream.end();
     };
 
-    await smartBuild.buildFile([
-        "../NanoCore/src/web_accessible_resources/imported.txt",
-        metaFile,
-    ], outputPath + "/imported.txt", processAll);
+    await smartBuild.buildFile([metaFile, recordFile], buildRecordFile, processAll);
 };
 /**
  * Build locale files, requires the core to be already built.
