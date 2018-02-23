@@ -82,12 +82,12 @@ exports.buildResources = async (browser) => {
     console.log("Building Nano Adblocker Resources...");
     assert(browser === "chromium" || browser === "firefox" || browser === "edge");
 
+    const outputPath = "./dist/nano_adblocker_" + browser + "/web_accessible_resources";
+    await smartBuild.createDirectory(outputPath);
+
     const metaFile = "../NanoCore/src/web_accessible_resources/to-import.txt";
     const recordFile = "../NanoCore/src/web_accessible_resources/imported.txt";
     const buildRecordFile = outputPath + "/imported.txt";
-
-    const outputPath = "./dist/nano_adblocker_" + browser + "/web_accessible_resources";
-    await smartBuild.createDirectory(outputPath);
 
     const parseOneDatabase = (data) => {
         const reNonEmptyLine = /\S/;
@@ -121,8 +121,12 @@ exports.buildResources = async (browser) => {
                 continue;
             }
 
-            if (fields === undefined) {
-                fields = line.trim().split(reSplitFields);
+            if (fields === null) {
+                line = line.trim();
+                if (!line) {
+                    continue;
+                }
+                fields = line.split(reSplitFields);
                 assert(fields.length === 2);
                 encoded = fields[1].includes(";");
                 continue;
@@ -146,7 +150,7 @@ exports.buildResources = async (browser) => {
         return database;
     };
 
-    const processOne = async (name, dbEnry, recordStream) => {
+    const processOne = async (name, dbEntry, recordStream) => {
         const reExtractMime = /^[^/]+\/([^\s;]+)/;
 
         recordStream.write(name);
@@ -154,7 +158,7 @@ exports.buildResources = async (browser) => {
 
         const md5 = forge.md.md5.create();
         md5.update(name);
-        name = md.digest().toHex();
+        name = md5.digest().toHex();
 
         let suffix = reExtractMime.exec(dbEntry.mime);
         assert(suffix);
@@ -167,7 +171,7 @@ exports.buildResources = async (browser) => {
         if (isBinay) {
             await fs.writeFile(outputPath + "/" + name, Buffer.from(dbEntry.content, "base64"), "binary");
         } else {
-            await fs.writeFile(outputPath + "/" + name, dbEntry.content, "utf8");
+            await fs.writeFile(outputPath + "/" + name, dbEntry.content + "\n", "utf8");
         }
     };
     const processAll = async () => {
@@ -176,9 +180,13 @@ exports.buildResources = async (browser) => {
         let toImport = [];
         for (let d of data) {
             d = d.trim();
-            if (!d.startsWith("#")) {
-                toImport.push(d);
+            if (!d) {
+                continue;
             }
+            if (d.startsWith("#")) {
+                continue;
+            }
+            toImport.push(d);
         }
 
         let [ublock, nano] = await Promise.all([
