@@ -9,6 +9,8 @@ Although the build engine reads credentials from environment variables, it is
 not safe to be used in a continuous integration server where the output console
 is publicly viewable.
 
+Credentials that you need are documented [here](/lib/find-credentials.js).
+
 ## Usage
 
 Depending on what is being built, these repositories may be required to be in
