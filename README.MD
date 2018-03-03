@@ -2,7 +2,7 @@
 
 The centralized build center
 
-The automated build center with streamlined build, test, and publish.
+An automated build center with streamlined build, test, and publish cycle.
 Requires latest current branch of [Node.js](https://nodejs.org/en/).
 
 Although the build engine reads credentials from environment variables, it is
