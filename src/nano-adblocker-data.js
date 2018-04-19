@@ -152,6 +152,9 @@ exports.manifest = (browser) => {
         };
         */
     } else if (browser === "edge") {
+        const i = manifest.version.indexOf(".");
+        manifest.version = manifest.version.substring(i + 1);
+
         // Edge does not care if the size is actually right but do care if the key name is right
         manifest.icons = {
             "16": "img/128_on.png",
@@ -164,7 +167,7 @@ exports.manifest = (browser) => {
         manifest.background.persistent = true;
 
         delete manifest.minimum_chrome_version;
-        manifest.minimum_edge_version = "40.15063.674.0";
+        manifest.minimum_edge_version = "41.16299.248.0";
 
         manifest.browser_specific_settings = {
             "edge": {
