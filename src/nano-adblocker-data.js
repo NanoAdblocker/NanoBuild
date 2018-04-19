@@ -153,7 +153,7 @@ exports.manifest = (browser) => {
         */
     } else if (browser === "edge") {
         const i = manifest.version.indexOf(".");
-        manifest.version = manifest.version.substring(i + 1);
+        manifest.version = manifest.version.substring(i + 1) + ".0";
 
         // Edge does not care if the size is actually right but do care if the key name is right
         manifest.icons = {
