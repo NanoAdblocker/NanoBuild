@@ -11,6 +11,10 @@ is publicly viewable.
 
 Credentials that you need are documented [here](/lib/find-credentials.js).
 
+The packaging tools for Edge is proprietary, but you can find everything you
+need to know
+[here](https://docs.microsoft.com/en-us/microsoft-edge/extensions/guides/packaging/using-manifoldjs-to-package-extensions).
+
 ## Usage
 
 Depending on what is being built, these repositories may be required to be in

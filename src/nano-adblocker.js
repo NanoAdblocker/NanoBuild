@@ -389,7 +389,7 @@ exports.publish = async (browser) => {
             packEdge = require("../../Prototype/NanoBuild/pack-edge.js");
         }
 
-        // ManifoldJS can break the directory structure
+        // The packaging module can break the directory structure
         await del("./dist/nano_adblocker_edge_appx");
         await del("./dist/Nano");
         await smartBuild.copyDirectory(
