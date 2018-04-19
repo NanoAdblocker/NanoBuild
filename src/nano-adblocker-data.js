@@ -13,12 +13,12 @@ const assert = require("assert");
  * The based on string.
  * @const {string}
  */
-exports.basedOn = "uBlock Origin Version/1.15.24 Commit/98df44c Sidebar/disabled";
+exports.basedOn = "uBlock Origin Version/1.16.0 Commit/6781beb Sidebar/disabled";
 /**
  * The version key.
  * @const {string}
  */
-exports.version = "1.0.0.41";
+exports.version = "1.0.0.42";
 
 /**
  * Extra information specific to Chrome.
@@ -94,7 +94,8 @@ exports.manifest = (browser) => {
                 "js": [
                     "js/vapi.js",
                     "js/vapi-client.js",
-                    "js/vapi-usercss.js",
+                    "js/vapi-usercss.pseudo.js",
+                    "js/vapi-usercss.real.js",
                     "js/contentscript.js",
                 ],
                 "run_at": "document_start",
