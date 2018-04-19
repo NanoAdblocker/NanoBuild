@@ -57,50 +57,65 @@ exports.manifest = (browser) => {
 
         "commands": {
             "launch-element-zapper": {
-                "description": "__MSG_popupTipZapper__"
+                "description": "__MSG_popupTipZapper__",
             },
             "launch-element-picker": {
-                "description": "__MSG_popupTipPicker__"
+                "description": "__MSG_popupTipPicker__",
             },
             "launch-logger": {
-                "description": "__MSG_popupTipLog__"
-            }
+                "description": "__MSG_popupTipLog__",
+            },
         },
 
         "icons": {
-            "128": "img/128_on.png"
+            "128": "img/128_on.png",
         },
         "browser_action": {
             "default_icon": {
-                "128": "img/128_on.png"
+                "128": "img/128_on.png",
             },
             "default_title": "Nano Adblocker",
-            "default_popup": "popup.html"
+            "default_popup": "popup.html",
         },
         "options_page": "dashboard.html",
         "options_ui": {
-            "page": "options_ui.html"
+            "page": "options_ui.html",
         },
 
         "background": {
-            "page": "background.html"
+            "page": "background.html",
         },
         "content_scripts": [
             {
-                "matches": ["http://*/*", "https://*/*"],
-                "js": ["/js/vapi.js", "/js/vapi-client.js", "/js/vapi-usercss.js", "/js/contentscript.js"],
+                "matches": [
+                    "http://*/*",
+                    "https://*/*",
+                ],
+                "js": [
+                    "js/vapi.js",
+                    "js/vapi-client.js",
+                    "js/vapi-usercss.js",
+                    "js/contentscript.js",
+                ],
                 "run_at": "document_start",
-                "all_frames": true
+                "all_frames": true,
             },
             {
-                "matches": ["http://*/*", "https://*/*"],
-                "js": ["/js/scriptlets/subscriber.js"],
+                "matches": [
+                    "http://*/*",
+                    "https://*/*",
+                ],
+                "js": [
+                    "js/scriptlets/subscriber.js",
+                ],
                 "run_at": "document_idle",
-                "all_frames": false
-            }
+                "all_frames": false,
+            },
         ],
 
-        "optional_permissions": ["file:///*"],
+        "optional_permissions": [
+            "file:///*",
+        ],
         "permissions": [
             "contextMenus",
             "privacy",
@@ -110,17 +125,17 @@ exports.manifest = (browser) => {
             "webNavigation",
             "webRequest",
             "webRequestBlocking",
-            "<all_urls>"
+            "<all_urls>",
         ],
         "web_accessible_resources": [
-            "/web_accessible_resources/*"
+            "/web_accessible_resources/*",
         ],
 
         "incognito": "split",
         "storage": {
-            "managed_schema": "managed_storage.json"
+            "managed_schema": "managed_storage.json",
         },
-        "minimum_chrome_version": "45.0"
+        "minimum_chrome_version": "45.0",
     };
 
     if (browser === "firefox") {
