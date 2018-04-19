@@ -13,7 +13,7 @@ const assert = require("assert");
  * The based on string.
  * @const {string}
  */
-exports.basedOn = "uBlock Origin Version/1.16.0 Commit/6781beb Sidebar/disabled";
+exports.basedOn = "uBlock Origin Version/1.16.0 Commit/6781beb UserCSS/disabled Sidebar/disabled";
 /**
  * The version key.
  * @const {string}
