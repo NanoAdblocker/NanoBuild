@@ -12,6 +12,7 @@ const assert = require("assert");
 const checkSyntax = require("../lib/check-syntax.js");
 const childProcess = require("../lib/promise-child.js");
 const data = require("./nano-adblocker-data.js");
+const del = require("del");
 const forge = require("node-forge");
 const fs = require("../lib/promise-fs.js");
 const makeArchive = require("../lib/make-archive.js");
@@ -389,12 +390,15 @@ exports.publish = async (browser) => {
         }
 
         // ManifoldJS can break the directory structure
+        await del("./dist/nano_adblocker_edge_appx");
+        await del("./dist/Nano");
         await smartBuild.copyDirectory(
             "./dist/nano_adblocker_" + browser,
             "./dist/nano_adblocker_" + browser + "_appx",
             true, true,
         );
-        packEdge.pack(
+
+        await packEdge.pack(
             fs, childProcess,
             "../NanoCore/platform/edge/package-img",
             "./dist",
