@@ -10,11 +10,13 @@
 const addonsServer = require("../lib/addons-server.js");
 const assert = require("assert");
 const checkSyntax = require("../lib/check-syntax.js");
+const childProcess = require("../lib/promise-child.js");
 const data = require("./nano-adblocker-data.js");
 const forge = require("node-forge");
 const fs = require("../lib/promise-fs.js");
 const makeArchive = require("../lib/make-archive.js");
 const ofs = require("fs");
+let packEdge; // Optional module for creating .appx package for Edge
 const smartBuild = require("../lib/smart-build.js");
 const webStore = require("../lib/web-store.js");
 
@@ -373,7 +375,7 @@ exports.pack = async (browser) => {
  */
 exports.publish = async (browser) => {
     console.log("Publishing Nano Adblocker...");
-    assert(browser === "chromium" || browser === "firefox");
+    assert(browser === "chromium" || browser === "firefox" || browser === "edge");
 
     const inputPath = "./dist/nano_adblocker_" + browser + ".zip";
 
@@ -381,5 +383,24 @@ exports.publish = async (browser) => {
         await webStore.publish(inputPath, data.chrome.id);
     } else if (browser === "firefox") {
         await addonsServer.publish(inputPath, data.version, data.firefox.id, "./dist/");
+    } else if (browser === "edge") {
+        if (packEdge === undefined) {
+            packEdge = require("../../Prototype/NanoBuild/pack-edge.js");
+        }
+
+        // ManifoldJS can break the directory structure
+        await smartBuild.copyDirectory(
+            "./dist/nano_adblocker_" + browser,
+            "./dist/nano_adblocker_" + browser + "_appx",
+            true, true,
+        );
+        packEdge.pack(
+            fs, childProcess,
+            "../NanoCore/platform/edge/package-img",
+            "./dist",
+            "./nano_adblocker_" + browser + "_appx",
+        );
+
+        console.warn(".appx package created, automatic upload is NOT yet implemented");
     }
 };
