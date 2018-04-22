@@ -381,7 +381,7 @@ exports.publish = async (browser) => {
     const inputPath = "./dist/nano_adblocker_" + browser + ".zip";
 
     if (browser === "chromium") {
-        await webStore.publish(inputPath, data.chrome.id);
+        await webStore.publish(inputPath, data.chromium.id);
     } else if (browser === "firefox") {
         await addonsServer.publish(inputPath, data.version, data.firefox.id, "./dist/");
     } else if (browser === "edge") {

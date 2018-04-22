@@ -21,10 +21,10 @@ exports.version = "1.0.0.42";
 exports.basedOn = "uBlock Origin Version/1.16.0 Commit/6781beb UserCSS/disabled Sidebar/disabled";
 
 /**
- * Extra information specific to Chrome.
+ * Extra information specific to Chromium.
  * @const {Object}
  */
-exports.chrome = {
+exports.chromium = {
     id: "gabbbocakeomblphkmmnoamkioajlkfo",
 };
 /**
