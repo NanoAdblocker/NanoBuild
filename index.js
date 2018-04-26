@@ -96,6 +96,11 @@ const nanoAdblocker = require("./src/nano-adblocker.js");
         publish = false;
     }
 
+    // https://nvd.nist.gov/vuln/detail/CVE-2018-3728
+    if (action === "firefox") {
+        throw new Error("Firefox build is disabled due to CVE-2018-3728");
+    }
+
     if (action === "clean") {
         await del("./dist");
     } else {
