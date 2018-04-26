@@ -35,7 +35,7 @@ node . <action> [<target>] [--upstream] [--pack] [--publish] [--trace-fs]
     --chromium    Build for Chromium
     --firefox     Build for Firefox
     --edge        Build for Edge
-    --clean       Delete all build files, implicitly disable <target>, --upstream, "--pack", and "--publish"
+    --clean       Delete all build files, implicitly disable <target>, "--upstream", "--pack", and "--publish"
 <target>          One of:
     --both        (Default) Build Nano Adblocker and Nano Defender
     --adblocker   Build Nano Adblocker
