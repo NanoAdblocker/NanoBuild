@@ -372,7 +372,7 @@ exports.pack = async (browser) => {
 /**
  * Publish package to extension store.
  * @async @function
- * @param {Enum} browser - One of "chromium".
+ * @param {Enum} browser - One of "chromium", "firefox", "edge".
  */
 exports.publish = async (browser) => {
     console.log("Publishing Nano Adblocker...");
