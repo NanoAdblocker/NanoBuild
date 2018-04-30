@@ -93,7 +93,7 @@ assert(/[\\/]NanoBuild$/.test(process.cwd()));
     }
 
     // https://nvd.nist.gov/vuln/detail/CVE-2018-3728
-    if (action === "firefox") {
+    if (action === "firefox" && (pack || publish)) {
         throw new Error("Firefox Build is Disabled Due to CVE-2018-3728");
     }
 
