@@ -97,7 +97,7 @@ const nanoDefenderMaintenance = require("./src/nano-defender-maintenance.js");
 
     if (action === "maintenance") {
         if (target === "both" || target === "adblocker") {
-            // Nothing for now.
+            console.log("No maintenance needed for Nano Adblocker.");
         }
 
         if (target === "both" || target === "defender") {
