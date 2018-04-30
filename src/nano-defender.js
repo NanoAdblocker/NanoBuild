@@ -88,7 +88,7 @@ exports.buildList = async () => {
             }
 
             if (line.startsWith("!@pragma-")) {
-                console.warn("Unrecognized directive: " + line);
+                console.warn("Unrecognized directive: " + line.substring(1));
             }
 
             if (removeComments && line.charAt(0) === '!') {
@@ -129,7 +129,6 @@ exports.buildList = async () => {
         outStream.end(os.EOL, resolve);
     });
 };
-
 /**
  * Build Nano Defender.
  * @async @function
@@ -144,8 +143,86 @@ exports.buildExtension = async (browser) => {
     outputPath += "/nano_defender_" + browser;
     await smartBuild.createDirectory(outputPath);
 
-    await smartBuild.copyDirectory(srcRepo + "/src", outputPath);
+    await smartBuild.copyDirectory(srcRepo + "/src", outputPath, true, true);
     await data.patchManifest(browser);
+
+    const buildOne = async (file) => {
+        let lines = await fs.readFile(file, "utf8");
+        lines = lines.split("\n");
+
+        let stream = fs.createWriteStream(file, {
+            flags: "w",
+            encoding: "utf8",
+        });
+
+        let inPragmaBlock = false;
+        let accepting = true;
+
+        for (const line of lines) {
+            const trimmed = line.trim();
+
+            if (trimmed === "//@pragma-if-debug") {
+                if (inPragmaBlock) {
+                    throw new Error("A @pragma-if-true directive is enclosed in another @pragma-if-* block");
+                }
+
+                inPragmaBlock = true;
+                accepting = false;
+                continue;
+            }
+            if (trimmed === "//@pragma-end-if") {
+                if (!inPragmaBlock) {
+                    throw new Error("A @pragma-end-if directive does not have a matching @pragma-if-* directive");
+                }
+
+                inPragmaBlock = false;
+                accepting = true;
+                continue;
+            }
+
+            if (line.startsWith("//@pragma-")) {
+                console.warn("Unrecognized directive: " + trimmed.substring(2));
+            }
+
+            if (accepting) {
+                stream.write(line);
+                stream.write(os.EOL);
+            }
+        }
+
+        await new Promise((resolve) => {
+            stream.end(resolve);
+        });
+    }
+    const buildDirectory = async (directory) => {
+        const files = await fs.readdir(directory);
+
+        let tasks = [];
+        for (const file of files) {
+            tasks.push(fs.lstat(directory + "/" + file));
+        }
+        tasks = await Promise.all(tasks);
+        assert(files.length === tasks.length);
+
+        let buildTasks = [];
+        for (let i = 0; i < files.length; i++) {
+            assert(!tasks[i].isSymbolicLink());
+
+            if (tasks[i].isDirectory()) {
+                // One directory at a time to make sure things will not get overloaded
+                await buildDirectory(directory + "/" + files[i]);
+                continue;
+            }
+
+            assert(tasks[i].isFile());
+            if (files[i].endsWith(".js")) {
+                buildTasks.push(buildOne(directory + "/" + files[i]));
+            }
+        }
+        await Promise.all(buildTasks);
+    };
+
+    await buildDirectory(outputPath);
 };
 
 /**
