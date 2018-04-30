@@ -11,7 +11,7 @@ An automated build center for streamlined build, test, and publish development
 cycles. Requires latest current branch of [Node.js](https://nodejs.org/en/).
 
 Although the build engine reads credentials from environment variables, it is
-not safe to be used in a continuous integration server where the output console
+not safe to use it in continuous integration servers where the output console
 is publicly viewable.
 
 Credentials that you need are documented [here](/lib/find-credentials.js).
