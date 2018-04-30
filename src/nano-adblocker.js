@@ -16,7 +16,6 @@ const del = require("del");
 const forge = require("node-forge");
 const fs = require("../lib/promise-fs.js");
 const makeArchive = require("../lib/make-archive.js");
-const ofs = require("fs");
 let packEdge; // Optional module for creating .appx package for Edge
 const smartBuild = require("../lib/smart-build.js");
 const webStore = require("../lib/web-store.js");
@@ -26,6 +25,7 @@ const webStore = require("../lib/web-store.js");
  * @const {string}
  */
 const srcRepo = "../NanoCore";
+const assetsRepo = "../NanoFilters";
 const edgeShim = "../Edgyfy/edgyfy.js";
 
 /**
@@ -52,9 +52,13 @@ exports.buildCore = async (browser) => {
         smartBuild.copyDirectory(srcRepo + "/platform/chromium/other", outputPath, false),
         smartBuild.copyFile(srcRepo + "/LICENSE", outputPath + "/LICENSE"),
     ]);
-    await smartBuild.buildFile(["./src/nano-adblocker-data.js"], outputPath + "/manifest.json", async () => {
-        await fs.writeFile(outputPath + "/manifest.json", data.manifest(browser), "utf8");
-    });
+    await smartBuild.buildFile(
+        ["./src/nano-adblocker-data.js"],
+        outputPath + "/manifest.json",
+        async () => {
+            await fs.writeFile(outputPath + "/manifest.json", data.manifest(browser), "utf8");
+        },
+    );
 
     if (browser === "firefox") {
         await smartBuild.copyDirectory(srcRepo + "/platform/webext", outputPath + "/js", false, true);
@@ -66,7 +70,7 @@ exports.buildCore = async (browser) => {
     }
 };
 /**
- * Copy filters over, requires the core to be already built.
+ * Build filters, requires the core to be already built.
  * @async @function
  * @param {Enum} browser - One of "chromium", "firefox", "edge".
  */
@@ -78,13 +82,13 @@ exports.buildFilter = async (browser) => {
     await smartBuild.createDirectory(outputPath);
 
     await Promise.all([
-        smartBuild.copyFile("../NanoCore/assets/assets.json", outputPath + "/assets.json"),
-        smartBuild.copyDirectory("../NanoFilters/NanoFilters", outputPath + "/NanoFilters"),
+        smartBuild.copyFile(srcRepo + "/assets/assets.json", outputPath + "/assets.json"),
+        smartBuild.copyDirectory(assetsRepo + "/NanoFilters", outputPath + "/NanoFilters"),
     ]);
-    await smartBuild.copyDirectory("../NanoFilters/ThirdParty", outputPath + "/ThirdParty");
+    await smartBuild.copyDirectory(assetsRepo + "/ThirdParty", outputPath + "/ThirdParty");
 };
 /**
- * Build web accessible resources directory.
+ * Build web accessible resources, requires the core to be already built.
  * @async @function
  * @param {Enum} browser - One of "chromium", "firefox", "edge".
  */
@@ -95,8 +99,8 @@ exports.buildResources = async (browser) => {
     const outputPath = "./dist/nano_adblocker_" + browser + "/web_accessible_resources";
     await smartBuild.createDirectory(outputPath);
 
-    const metaFile = "../NanoCore/src/web_accessible_resources/to-import.txt";
-    const recordFile = "../NanoCore/src/web_accessible_resources/imported.txt";
+    const metaFile = srcRepo + "/src/web_accessible_resources/to-import.txt";
+    const recordFile = srcRepo + "/src/web_accessible_resources/imported.txt";
     const buildRecordFile = outputPath + "/imported.txt";
 
     const parseOneDatabase = (data) => {
@@ -166,7 +170,7 @@ exports.buildResources = async (browser) => {
         recordStream.write(name);
         recordStream.write("\n");
 
-        const md5 = forge.md.md5.create();
+        let md5 = forge.md.md5.create();
         md5.update(name);
         name = md5.digest().toHex();
 
@@ -200,19 +204,19 @@ exports.buildResources = async (browser) => {
         }
 
         let [ublock, nano] = await Promise.all([
-            fs.readFile("../NanoFilters/ThirdParty/uBlockResources.txt", "utf8"),
-            fs.readFile("../NanoFilters/NanoFilters/NanoResources.txt", "utf8"),
+            fs.readFile(assetsRepo + "/ThirdParty/uBlockResources.txt", "utf8"),
+            fs.readFile(assetsRepo + "/NanoFilters/NanoResources.txt", "utf8"),
         ]);
         ublock = parseOneDatabase(ublock);
         nano = parseOneDatabase(nano);
 
         await fs.copyFile(recordFile, buildRecordFile);
-        let recordStream = ofs.createWriteStream(buildRecordFile, {
+        let recordStream = fs.createWriteStream(buildRecordFile, {
             flags: "a",
             encoding: "utf8",
         });
 
-        for (let file of toImport) {
+        for (const file of toImport) {
             if (file in nano) {
                 await processOne(file, nano[file], recordStream);
             } else if (file in ublock) {
@@ -222,8 +226,9 @@ exports.buildResources = async (browser) => {
             }
         }
 
-        recordStream.write("\n");
-        recordStream.end();
+        await new Promise((resolve) => {
+            recordStream.end("\n", resolve);
+        });
     };
 
     await smartBuild.buildFile([metaFile, recordFile], buildRecordFile, processAll);
@@ -242,8 +247,8 @@ exports.buildLocale = async (browser) => {
 
     let allKeys = [];
     let [enOriginal, enExtra] = await Promise.all([
-        fs.readFile("../NanoCore/src/_locales/en/messages.json", "utf8"),
-        fs.readFile("../NanoCore/src/_nano-locales/en/messages.nano.js", "utf8"),
+        fs.readFile(srcRepo + "/src/_locales/en/messages.json", "utf8"),
+        fs.readFile(srcRepo + "/src/_nano-locales/en/messages.nano.js", "utf8"),
     ]);
     enOriginal = JSON.parse(enOriginal);
     enExtra = eval(enExtra); // Trust me, it will be fine
@@ -251,7 +256,7 @@ exports.buildLocale = async (browser) => {
     assert(enOriginal && typeof enOriginal === "object");
     assert(enExtra && typeof enExtra === "object");
 
-    for (let key in enOriginal) {
+    for (const key in enOriginal) {
         if (key === "dummy") {
             continue;
         }
@@ -262,7 +267,7 @@ exports.buildLocale = async (browser) => {
             allKeys.push(key);
         }
     }
-    for (let key in enExtra) {
+    for (const key in enExtra) {
         if (enExtra.hasOwnProperty(key)) {
             assert(!allKeys.includes(key));
             assert(enExtra[key] && typeof enExtra[key] === "object" && typeof enExtra[key].message === "string");
@@ -276,18 +281,18 @@ exports.buildLocale = async (browser) => {
         let original, extra;
         if (hasExtra) {
             [original, extra] = await Promise.all([
-                fs.readFile("../NanoCore/src/_locales/" + lang + "/messages.json", "utf8"),
-                fs.readFile("../NanoCore/src/_nano-locales/" + lang + "/messages.nano.js", "utf8"),
+                fs.readFile(srcRepo + "/src/_locales/" + lang + "/messages.json", "utf8"),
+                fs.readFile(srcRepo + "/src/_nano-locales/" + lang + "/messages.nano.js", "utf8"),
             ]);
         } else {
-            original = await fs.readFile("../NanoCore/src/_locales/" + lang + "/messages.json", "utf8");
+            original = await fs.readFile(srcRepo + "/src/_locales/" + lang + "/messages.json", "utf8");
             extra = "(() => { 'use strict'; return { }; })();";
         }
         original = JSON.parse(original);
         extra = eval(extra);
 
         let result = {};
-        for (let key of allKeys) {
+        for (const key of allKeys) {
             const originalHas = original.hasOwnProperty(key);
             const extraHas = extra.hasOwnProperty(key);
 
@@ -312,8 +317,6 @@ exports.buildLocale = async (browser) => {
             }
 
             result[key].message = result[key].message.replace(/uBlock Origin|uBlock\u2080|uBlock(?!\/)|uBO/g, "Nano").replace(/ublock/g, "nano");
-
-            // Special cases
             if (key === "1pResourcesOriginal") {
                 result[key].message = result[key].message.replace("Nano", "uBlock Origin");
             }
@@ -326,21 +329,21 @@ exports.buildLocale = async (browser) => {
     };
 
     const [langsOriginal, langsExtra] = await Promise.all([
-        fs.readdir("../NanoCore/src/_locales"),
-        fs.readdir("../NanoCore/src/_nano-locales"),
+        fs.readdir(srcRepo + "/src/_locales"),
+        fs.readdir(srcRepo + "/src/_nano-locales"),
     ]);
     let tasks = [];
-    for (let lang of langsOriginal) {
+    for (const lang of langsOriginal) {
         if (langsExtra.includes(lang)) {
             tasks.push(smartBuild.buildFile([
                 "./src/nano-adblocker-data.js",
-                "../NanoCore/src/_locales/" + lang + "/messages.json",
-                "../NanoCore/src/_nano-locales/" + lang + "/messages.nano.js",
+                srcRepo + "/src/_locales/" + lang + "/messages.json",
+                srcRepo + "/src/_nano-locales/" + lang + "/messages.nano.js",
             ], outputPath + "/" + lang + "/messages.json", processOne, lang, true));
         } else {
             tasks.push(smartBuild.buildFile([
                 "./src/nano-adblocker-data.js",
-                "../NanoCore/src/_locales/" + lang + "/messages.json",
+                srcRepo + "/src/_locales/" + lang + "/messages.json",
             ], outputPath + "/" + lang + "/messages.json", processOne, lang, false));
         }
     }
@@ -404,9 +407,9 @@ exports.publish = async (browser) => {
             "./dist/nano_adblocker_" + browser + "_appx",
         );
 
-        await packEdge.pack(
+        await packEdge.packAdblocker(
             fs, childProcess,
-            "../NanoCore/platform/edge/package-img",
+            srcRepo + "/platform/edge/package-img",
             "./dist",
             "./nano_adblocker_" + browser + "_appx",
         );

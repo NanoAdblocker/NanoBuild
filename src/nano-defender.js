@@ -13,15 +13,19 @@ const os = require("os");
 const smartBuild = require("../lib/smart-build.js");
 
 /**
- * Build Nano Defender Integration list.
+ * Source repositories and files.
+ * @const {string}
+ */
+const srcRepo = "../uBlockProtector";
+
+/**
+ * Build Nano Defender Integration filter list.
  * @async @function
  */
 exports.buildList = async () => {
     console.log("Building Nano Defender Integration List...");
 
-    let out = [];
-
-    const buildOne = async (path, removeComments = true) => {
+    const buildOne = async (path, outStream, removeComments = true) => {
         let lines = await fs.readFile(path, "utf8");
         lines = lines.split("\n");
 
@@ -95,7 +99,8 @@ exports.buildList = async () => {
             }
 
             if (accepting) {
-                out.push(line);
+                outStream.write(line);
+                outStream.write(os.EOL);
             }
         }
 
@@ -104,23 +109,28 @@ exports.buildList = async () => {
         }
     };
 
-    const input = "../uBlockProtector/list";
-    const output = "../uBlockProtector/uBlockProtectorList.txt";
+    const input = srcRepo + "/list";
+    const output = srcRepo + "/uBlockProtectorList.txt";
 
-    await buildOne(input + "/1-header.txt", false);
-    await buildOne(input + "/2-integration.txt");
-    await buildOne(input + "/3-rules.txt");
-    await buildOne(input + "/4-generichide.txt");
-    await buildOne(input + "/5-whitelist.txt");
-    await buildOne(input + "/6-other.txt", false);
+    let outStream = fs.createWriteStream(output, {
+        flags: "w",
+        encoding: "utf8",
+    });
 
-    out.push("");
-    out = out.join(os.EOL);
-    await fs.writeFile(output, out, "utf8");
+    await buildOne(input + "/1-header.txt", outStream, false);
+    await buildOne(input + "/2-integration.txt", outStream);
+    await buildOne(input + "/3-rules.txt", outStream);
+    await buildOne(input + "/4-generichide.txt", outStream);
+    await buildOne(input + "/5-whitelist.txt", outStream);
+    await buildOne(input + "/6-other.txt", outStream, false);
+
+    await new Promise((resolve) => {
+        outStream.end(os.EOL, resolve);
+    });
 };
 
 /**
- * Build Nano Defender Integration list.
+ * Build Nano Defender.
  * @async @function
  * @param {Enum} browser - One of "chromium", "firefox", "edge".
  */
@@ -133,11 +143,12 @@ exports.buildExtension = async (browser) => {
     outputPath += "/nano_defender_" + browser;
     await smartBuild.createDirectory(outputPath);
 
-    await smartBuild.copyDirectory("../uBlockProtector/src", outputPath);
+    await smartBuild.copyDirectory(srcRepo + "/src", outputPath);
     await data.patchManifest(browser);
 };
+
 /**
- * Test the extension build package.
+ * Test the build package.
  * @async @function
  * @param {Enum} browser - One of "chromium", "firefox", "edge".
  */
@@ -177,26 +188,23 @@ exports.publish = async (browser) => {
     } else if (browser === "firefox") {
         await addonsServer.publish(inputPath, data.version, data.firefox.id, "./dist/");
     } else if (browser === "edge") {
-        // TODO
-        throw "TODO";
-
         if (packEdge === undefined) {
             packEdge = require("../../Prototype/NanoBuild/pack-edge.js");
         }
 
         // The packaging module can break the directory structure
-        await del("./dist/nano_adblocker_edge_appx");
-        await del("./dist/Nano");
+        await del("./dist/nano_defender_edge_appx");
+        await del("./dist/NanoDefender");
         await smartBuild.copyDirectory(
-            "./dist/nano_adblocker_" + browser,
-            "./dist/nano_adblocker_" + browser + "_appx",
+            "./dist/nano_defender_" + browser,
+            "./dist/nano_defender_" + browser + "_appx",
         );
 
-        await packEdge.pack(
+        await packEdge.packDefender(
             fs, childProcess,
             "../NanoCore/platform/edge/package-img",
             "./dist",
-            "./nano_adblocker_" + browser + "_appx",
+            "./nano_defender_" + browser + "_appx",
         );
 
         console.warn(".appx package created, automatic upload is NOT yet implemented");

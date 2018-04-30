@@ -7,9 +7,15 @@
  * Load modules.
  * @const {Module}
  */
+const fs = require("../lib/promise-fs.js");
 const https = require("https");
 const url = require("url");
-const fs = require("../lib/promise-fs.js");
+
+/**
+ * Source repositories and files.
+ * @const {string}
+ */
+const srcRepo = "../uBlockProtector";
 
 /**
  * Perform maintenance of Nano Defender, update dependencies.
@@ -19,9 +25,12 @@ exports.performMaintenance = () => {
     console.log("Performing Maintenance for Nano Defender...");
 
     const source = "https://raw.githubusercontent.com/gorhill/uBO-Extra/master/contentscript.js";
-    const output = "../uBlockProtector/src/content/5-ubo-extra.js";
+    const output = srcRepo + "/src/content/5-ubo-extra.js";
 
-    const stream = fs.createWriteStream(output);
+    const stream = fs.createWriteStream(output, {
+        flags: "w",
+        encoding: "utf8",
+    });
     stream.write(
         "(() => {\n" +
         "    if (a.uBOExtraExcluded) {\n" +
@@ -44,9 +53,9 @@ exports.performMaintenance = () => {
                     "\n" +
                     "\n" +
                     "\n" +
-                    "})();\n"
+                    "})();\n",
+                    resolve,
                 );
-                resolve();
             });
 
             res.on("error", reject);
