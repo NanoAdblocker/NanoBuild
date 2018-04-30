@@ -16,7 +16,7 @@ const fs = require("../lib/promise-fs.js");
  * @async @function
  */
 exports.performMaintenance = () => {
-    console.log("Performing maintenance for Nano Defender...");
+    console.log("Performing Maintenance for Nano Defender...");
 
     const source = "https://raw.githubusercontent.com/gorhill/uBO-Extra/master/contentscript.js";
     const output = "../uBlockProtector/src/content/5-ubo-extra.js";

@@ -1,5 +1,5 @@
 /**
- * Generate browser specific manifest file for Nano Adblocker.
+ * Nano Adblocker build data.
  */
 "use strict";
 

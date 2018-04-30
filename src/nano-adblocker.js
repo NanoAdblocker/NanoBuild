@@ -366,7 +366,7 @@ exports.pack = async (browser) => {
     assert(browser === "chromium" || browser === "firefox" || browser === "edge");
 
     const inputPath = "./dist/nano_adblocker_" + browser;
-    const outputPath = "./dist/nano_adblocker_" + browser + ".zip";
+    const outputPath = inputPath + ".zip";
     await makeArchive.zip(inputPath, outputPath);
 };
 /**
@@ -395,7 +395,6 @@ exports.publish = async (browser) => {
         await smartBuild.copyDirectory(
             "./dist/nano_adblocker_" + browser,
             "./dist/nano_adblocker_" + browser + "_appx",
-            true, true,
         );
 
         await packEdge.pack(
