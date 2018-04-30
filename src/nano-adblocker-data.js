@@ -10,7 +10,7 @@
 const assert = require("assert");
 
 /**
- * The version key.
+ * The version number.
  * @const {string}
  */
 exports.version = "1.0.0.44";
@@ -45,79 +45,74 @@ exports.manifest = (browser) => {
     assert(browser === "chromium" || browser === "firefox" || browser === "edge");
 
     let manifest = {
-        "manifest_version": 2,
-
-        "name": "Nano Adblocker",
-        "short_name": "Nano",
-        "description": "Just another adblocker",
         "author": "All Nano Adblocker and uBlock Origin contributors",
-        "version": exports.version,
-
-        "default_locale": "en",
-
-        "commands": {
-            "launch-element-zapper": {
-                "description": "__MSG_popupTipZapper__",
-            },
-            "launch-element-picker": {
-                "description": "__MSG_popupTipPicker__",
-            },
-            "launch-logger": {
-                "description": "__MSG_popupTipLog__",
-            },
-        },
-
-        "icons": {
-            "128": "img/128_on.png",
+        "background": {
+            "page": "background.html"
         },
         "browser_action": {
             "default_icon": {
-                "128": "img/128_on.png",
+                "128": "img/128_on.png"
             },
-            "default_title": "Nano Adblocker",
             "default_popup": "popup.html",
+            "default_title": "Nano Adblocker"
         },
-        "options_page": "dashboard.html",
-        "options_ui": {
-            "page": "options_ui.html",
-        },
-
-        "background": {
-            "page": "background.html",
+        "commands": {
+            "launch-element-picker": {
+                "description": "__MSG_popupTipPicker__"
+            },
+            "launch-element-zapper": {
+                "description": "__MSG_popupTipZapper__"
+            },
+            "launch-logger": {
+                "description": "__MSG_popupTipLog__"
+            }
         },
         "content_scripts": [
             {
-                "matches": [
-                    "http://*/*",
-                    "https://*/*",
-                ],
+                "all_frames": true,
                 "js": [
                     "js/vapi.js",
                     "js/vapi-client.js",
                     "js/vapi-usercss.pseudo.js",
                     "js/vapi-usercss.real.js",
-                    "js/contentscript.js",
+                    "js/contentscript.js"
                 ],
-                "run_at": "document_start",
-                "all_frames": true,
-            },
-            {
                 "matches": [
                     "http://*/*",
-                    "https://*/*",
+                    "https://*/*"
                 ],
-                "js": [
-                    "js/scriptlets/subscriber.js",
-                ],
-                "run_at": "document_idle",
-                "all_frames": false,
+                "run_at": "document_start"
             },
+            {
+                "all_frames": false,
+                "js": [
+                    "js/scriptlets/subscriber.js"
+                ],
+                "matches": [
+                    "http://*/*",
+                    "https://*/*"
+                ],
+                "run_at": "document_idle"
+            }
         ],
-
+        "default_locale": "en",
+        "description": "Just another adblocker",
+        "icons": {
+            "128": "img/128_on.png"
+        },
+        "incognito": "split",
+        "manifest_version": 2,
+        "minimum_chrome_version": "45.0",
+        "name": "Nano Adblocker",
         "optional_permissions": [
-            "file:///*",
+            "file:///*"
         ],
+        "options_page": "dashboard.html",
+        "options_ui": {
+            "page": "options_ui.html"
+        },
         "permissions": [
+            "<all_urls>",
             "contextMenus",
             "privacy",
             "storage",
@@ -125,75 +120,65 @@ exports.manifest = (browser) => {
             "unlimitedStorage",
             "webNavigation",
             "webRequest",
-            "webRequestBlocking",
-            "<all_urls>",
+            "webRequestBlocking"
         ],
-        "web_accessible_resources": [
-            "/web_accessible_resources/*",
-        ],
-
-        "incognito": "split",
         "storage": {
-            "managed_schema": "managed_storage.json",
+            "managed_schema": "managed_storage.json"
         },
-        "minimum_chrome_version": "45.0",
+        "version": exports.version,
+        "web_accessible_resources": [
+            "web_accessible_resources/*"
+        ]
     };
 
     if (browser === "firefox") {
-        delete manifest.options_page;
-        manifest.options_ui = {
-            "open_in_tab": true,
-            "page": "dashboard.html"
-        };
-
-        manifest.incognito = "spanning";
-        delete manifest.storage;
-        delete manifest.minimum_chrome_version;
-
         manifest.applications = {
             "gecko": {
                 "id": exports.firefox.id,
                 "strict_min_version": "52.0"
             }
         };
-
-        // TODO 2018-01-13: The side bar feels really quirky, disable it for now
-        /*
+        manifest.incognito = "spanning";
+        delete manifest.minimum_chrome_version;
+        delete manifest.options_page;
+        manifest.options_ui = {
+            "open_in_tab": true,
+            "page": "dashboard.html"
+        };
         manifest.sidebar_action = {
-            "default_title": "__MSG_statsPageName__",
-            "default_panel": "logger-ui.html",
             "default_icon": {
                 "128": "img/128_on.png"
-            }
+            },
+            "default_panel": "logger-ui.html",
+            "default_title": "__MSG_statsPageName__"
         };
-        */
+        delete manifest.storage;
     } else if (browser === "edge") {
-        const i = manifest.version.indexOf(".");
-        manifest.version = manifest.version.substring(i + 1) + ".0";
-
-        // Edge does not care if the size is actually right but do care if the key name is right
-        manifest.icons = {
-            "16": "img/128_on.png",
-            "128": "img/128_on.png"
+        manifest["-ms-preload"] = {
+            "backgroundScript": "js/edgyfy.js",
+            "contentScript": "js/edgyfy.js"
         };
+        manifest.background.persistent = true;
         manifest.browser_action.default_icon = {
             "38": "img/128_on.png"
         };
-
-        manifest.background.persistent = true;
-
-        delete manifest.minimum_chrome_version;
-        manifest.minimum_edge_version = "41.16299.248.0";
-
         manifest.browser_specific_settings = {
             "edge": {
                 "browser_action_next_to_addressbar": true
             }
         };
-        manifest["-ms-preload"] = {
-            "backgroundScript": "js/edgyfy.js",
-            "contentScript": "js/edgyfy.js"
+        // Edge does not care if the size is actually right but do care if the
+        // key name is right
+        manifest.icons = {
+            "128": "img/128_on.png",
+            "16": "img/128_on.png"
         };
+        delete manifest.minimum_chrome_version;
+        manifest.minimum_edge_version = "41.16299.248.0";
+        {
+            const i = manifest.version.indexOf(".");
+            manifest.version = manifest.version.substring(i + 1) + ".0";
+        }
     }
 
     return JSON.stringify(manifest, null, 2);

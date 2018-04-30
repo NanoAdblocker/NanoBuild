@@ -1,5 +1,5 @@
 /**
- * Main build script.
+ * Build engine entry point.
  */
 "use strict";
 
@@ -11,22 +11,24 @@
 const assert = require("assert");
 const del = require("del");
 const nanoAdblocker = require("./src/nano-adblocker.js");
+const nanoDefender = require("./src/nano-defender.js");
 const nanoDefenderMaintenance = require("./src/nano-defender-maintenance.js");
 
 
-(async () => {
-    process.on("unhandledRejection", (e) => {
-        throw e;
-    });
-    assert(/[\\/]NanoBuild$/.test(process.cwd()));
+process.on("unhandledRejection", (e) => {
+    throw e;
+});
 
+assert(/[\\/]NanoBuild$/.test(process.cwd()));
+
+(async () => {
     let action = null;
     let target = null;
     let pack = null;
     let publish = null;
 
-    let argv = process.argv.slice(2);
-    for (let arg of argv) {
+    const argv = process.argv.slice(2);
+    for (const arg of argv) {
         switch (arg) {
             case "--chromium":
                 assert(action === null);
@@ -92,17 +94,18 @@ const nanoDefenderMaintenance = require("./src/nano-defender-maintenance.js");
 
     // https://nvd.nist.gov/vuln/detail/CVE-2018-3728
     if (action === "firefox") {
-        throw new Error("Firefox build is disabled due to CVE-2018-3728");
+        throw new Error("Firefox Build is Disabled Due to CVE-2018-3728");
     }
 
     if (action === "maintenance") {
         if (target === "both" || target === "adblocker") {
-            console.log("No maintenance needed for Nano Adblocker.");
+            console.log("No Maintenance Needed for Nano Adblocker.");
         }
 
         if (target === "both" || target === "defender") {
             await nanoDefenderMaintenance.performMaintenance();
         }
+
     } else if (action === "clean") {
         await del("./dist");
     } else {
@@ -122,8 +125,17 @@ const nanoDefenderMaintenance = require("./src/nano-defender-maintenance.js");
         }
 
         if (target === "both" || target === "defender") {
-            // TODO
-            console.error("Nano Defender building is NOT yet implemented");
+            await nanoDefender.buildList(action);
+            await nanoDefender.buildExtension(action);
+
+            if (pack || publish) {
+                await nanoDefender.test(action);
+                await nanoDefender.pack(action);
+            }
+            if (publish) {
+                await nanoDefender.publish(action);
+            }
         }
+
     }
 })();

@@ -37,7 +37,7 @@ node . <action> [<target>] [--upstream] [--pack] [--publish] [--trace-fs]
     --firefox       Build for Firefox
     --edge          Build for Edge
     --maintenance   Run source maintenance scripts
-    --clean         Delete all build files, implicitly disable <target>, "--upstream", "--pack", and "--publish"
+    --clean         Delete all build files, implicitly disable <target>, "--pack", and "--publish"
 <target>            One of:
     --both          (Default) Build both Nano Adblocker and Nano Defender
     --adblocker     Build Nano Adblocker

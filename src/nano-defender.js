@@ -1,5 +1,5 @@
 /**
- * Build Nano Defender.
+ * Nano Defender build script.
  */
 "use strict";
 

@@ -1,5 +1,5 @@
 /**
- * Build Nano Adblocker.
+ * Nano Adblocker build script.
  */
 "use strict";
 
@@ -22,6 +22,13 @@ const smartBuild = require("../lib/smart-build.js");
 const webStore = require("../lib/web-store.js");
 
 /**
+ * Source repositories and files.
+ * @const {string}
+ */
+const srcRepo = "../NanoCore";
+const edgeShim = "../Edgyfy/edgyfy.js";
+
+/**
  * Build Nano Adblocker core.
  * @function
  * @param {Enum} browser - One of "chromium", "firefox", "edge".
@@ -35,26 +42,26 @@ exports.buildCore = async (browser) => {
     outputPath += "/nano_adblocker_" + browser;
     await smartBuild.createDirectory(outputPath);
 
-    await smartBuild.copyDirectory("../NanoCore/src/css", outputPath + "/css");
-    await smartBuild.copyDirectory("../NanoCore/src/nano-img", outputPath + "/img");
-    await smartBuild.copyDirectory("../NanoCore/src/js", outputPath + "/js");
-    await smartBuild.copyDirectory("../NanoCore/src/lib", outputPath + "/lib");
-    await smartBuild.copyDirectory("../NanoCore/src", outputPath, false);
-    await smartBuild.copyDirectory("../NanoCore/platform/chromium", outputPath + "/js", false);
+    await smartBuild.copyDirectory(srcRepo + "/src/css", outputPath + "/css");
+    await smartBuild.copyDirectory(srcRepo + "/src/nano-img", outputPath + "/img");
+    await smartBuild.copyDirectory(srcRepo + "/src/js", outputPath + "/js");
+    await smartBuild.copyDirectory(srcRepo + "/src/lib", outputPath + "/lib");
+    await smartBuild.copyDirectory(srcRepo + "/src", outputPath, false);
+    await smartBuild.copyDirectory(srcRepo + "/platform/chromium", outputPath + "/js", false);
     await Promise.all([
-        smartBuild.copyDirectory("../NanoCore/platform/chromium/other", outputPath, false),
-        smartBuild.copyFile("../NanoCore/LICENSE", outputPath + "/LICENSE"),
+        smartBuild.copyDirectory(srcRepo + "/platform/chromium/other", outputPath, false),
+        smartBuild.copyFile(srcRepo + "/LICENSE", outputPath + "/LICENSE"),
     ]);
     await smartBuild.buildFile(["./src/nano-adblocker-data.js"], outputPath + "/manifest.json", async () => {
         await fs.writeFile(outputPath + "/manifest.json", data.manifest(browser), "utf8");
     });
 
     if (browser === "firefox") {
-        await smartBuild.copyDirectory("../NanoCore/platform/webext", outputPath + "/js", false, true);
+        await smartBuild.copyDirectory(srcRepo + "/platform/webext", outputPath + "/js", false, true);
     } else if (browser === "edge") {
         await Promise.all([
-            smartBuild.copyDirectory("../NanoCore/platform/edge", outputPath + "/js", false, true),
-            smartBuild.copyFile("../Edgyfy/edgyfy.js", outputPath + "/js/edgyfy.js"),
+            smartBuild.copyDirectory(srcRepo + "/platform/edge", outputPath + "/js", false, true),
+            smartBuild.copyFile(edgeShim, outputPath + "/js/edgyfy.js"),
         ]);
     }
 };
