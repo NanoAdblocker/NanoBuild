@@ -5,7 +5,7 @@ The centralized build center
 **Building for Firefox is disabled due to a dependency of
 [mozilla/sign-addon](https://github.com/mozilla/sign-addon) being flagged as
 vulnerable by the National Vulnerability Database, for more detail please
-click [here](https://nvd.nist.gov/vuln/detail/CVE-2018-3728).**
+[click here](https://nvd.nist.gov/vuln/detail/CVE-2018-3728).**
 
 An automated build center for streamlined build, test, and publish development
 cycles. Requires latest current branch of [Node.js](https://nodejs.org/en/).
