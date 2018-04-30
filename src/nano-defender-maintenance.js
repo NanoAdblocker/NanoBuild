@@ -27,18 +27,22 @@ exports.performMaintenance = () => {
         "    if (a.uBOExtraExcluded) {\n" +
         "        return;\n" +
         "    }\n" +
+        "\n" +
+        "\n" +
         "\n"
     );
 
     return new Promise((resolve, reject) => {
         const options = url.parse(source);
         const req = https.request(options, (res) => {
-            res.pipe(writeStream, {
+            res.pipe(stream, {
                 end: false,
             });
 
             res.on("end", () => {
-                writeStream.end(
+                stream.end(
+                    "\n" +
+                    "\n" +
                     "\n" +
                     "})();\n"
                 );
