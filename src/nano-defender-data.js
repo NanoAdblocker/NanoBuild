@@ -75,8 +75,8 @@ exports.patchManifest = async (browser) => {
         // Edge does not care if the size is actually right but do care if the
         // key name is right
         manifest["-ms-preload"] = {
-            "backgroundScript": "js/edgyfy.js",
-            "contentScript": "js/edgyfy.js"
+            "backgroundScript": "edgyfy.js",
+            "contentScript": "edgyfy.js"
         };
         manifest.background.persistent = true;
         manifest.background.scripts = [

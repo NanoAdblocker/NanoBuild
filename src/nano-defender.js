@@ -25,6 +25,7 @@ const webStore = require("../lib/web-store.js");
  * @const {string}
  */
 const srcRepo = "../uBlockProtector";
+const edgeShim = "../Edgyfy/edgyfy.js";
 
 /**
  * Build Nano Defender Integration filter list.
@@ -234,6 +235,10 @@ exports.buildExtension = async (browser) => {
     };
 
     await buildDirectory(outputPath);
+
+    if (browser === "edge") {
+        await smartBuild.copyFile(edgeShim, outputPath + "/edgyfy.js");
+    }
 };
 
 /**
