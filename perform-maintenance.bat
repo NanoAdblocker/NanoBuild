@@ -1,5 +1,5 @@
 @ECHO OFF
 
-NODE . --maintenance
+NODE . --maintenance --both
 
 PAUSE
