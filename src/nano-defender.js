@@ -7,11 +7,18 @@
  * Load modules.
  * @const {Module}
  */
+const addonsServer = require("../lib/addons-server.js");
 const assert = require("assert");
+const checkSyntax = require("../lib/check-syntax.js");
+const childProcess = require("../lib/promise-child.js");
 const data = require("./nano-defender-data.js");
+const del = require("del");
 const fs = require("../lib/promise-fs.js");
+const makeArchive = require("../lib/make-archive.js");
+let packEdge; // Optional module for creating .appx package for Edge
 const os = require("os");
 const smartBuild = require("../lib/smart-build.js");
+const webStore = require("../lib/web-store.js");
 
 /**
  * Source repositories and files.
