@@ -23,26 +23,24 @@ need to know
 ## Usage
 
 Depending on what is being built, these repositories may be required to be in
-the same parent directory: `NanoCore`, `NanoFilters`, `NanoDefender`,
-`uBlockProtector`, `uBO-Extra`, `Edgyfy`, `uBlock`, `uAssets`.
+the same parent directory: `NanoCore`, `NanoFilters`, `NanoDefender`, `Edgyfy`.
 
 The private repository `Prototype` is required for publishing.
 
 ```
 node . <action> [<target>] [--upstream] [--pack] [--publish] [--trace-fs]
 
-<action>          One of:
-    --chromium    Build for Chromium
-    --firefox     Build for Firefox
-    --edge        Build for Edge
-    --clean       Delete all build files, implicitly disable <target>, "--upstream", "--pack", and "--publish"
-<target>          One of:
-    --both        (Default) Build Nano Adblocker and Nano Defender
-    --adblocker   Build Nano Adblocker
-    --defender    Build Nano Defender
-    --ubo         Build uBlock Origin
---upstream        Prefer upstream repository
---pack            Create .zip packages
---publish         Publish build packages, implicitly apply "--pack"
---trace-fs        Log file system access, excludes streams and other NPM packages
+<action>            One of:
+    --chromium      Build for Chromium
+    --firefox       Build for Firefox
+    --edge          Build for Edge
+    --maintenance   Run source maintenance scripts
+    --clean         Delete all build files, implicitly disable <target>, "--upstream", "--pack", and "--publish"
+<target>            One of:
+    --both          (Default) Build both Nano Adblocker and Nano Defender
+    --adblocker     Build Nano Adblocker
+    --defender      Build Nano Defender
+--pack              Create .zip packages
+--publish           Publish build packages, implicitly apply "--pack"
+--trace-fs          Log file system access, excludes streams and other NPM packages
 ```

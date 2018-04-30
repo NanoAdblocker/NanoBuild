@@ -11,6 +11,7 @@
 const assert = require("assert");
 const del = require("del");
 const nanoAdblocker = require("./src/nano-adblocker.js");
+const nanoDefenderMaintenance = require("./src/nano-defender-maintenance.js");
 
 
 (async () => {
@@ -21,7 +22,6 @@ const nanoAdblocker = require("./src/nano-adblocker.js");
 
     let action = null;
     let target = null;
-    let upstream = null;
     let pack = null;
     let publish = null;
 
@@ -40,6 +40,10 @@ const nanoAdblocker = require("./src/nano-adblocker.js");
                 assert(action === null);
                 action = "edge";
                 break;
+            case "--maintenance":
+                assert(action === null);
+                action = "maintenance";
+                break;
             case "--clean":
                 assert(action === null);
                 action = "clean";
@@ -57,15 +61,7 @@ const nanoAdblocker = require("./src/nano-adblocker.js");
                 assert(target === null);
                 target = "defender";
                 break;
-            case "--ubo":
-                assert(target === null);
-                target = "ubo";
-                break;
 
-            case "--upstream":
-                assert(upstream === null);
-                upstream = true;
-                break;
             case "--pack":
                 assert(pack === null);
                 pack = true;
@@ -82,12 +78,10 @@ const nanoAdblocker = require("./src/nano-adblocker.js");
                 break;
         }
     }
+
     assert(action !== null);
     if (target === null) {
         target = "both";
-    }
-    if (upstream === null) {
-        upstream = false;
     }
     if (pack === null) {
         pack = false;
@@ -101,32 +95,35 @@ const nanoAdblocker = require("./src/nano-adblocker.js");
         throw new Error("Firefox build is disabled due to CVE-2018-3728");
     }
 
-    if (action === "clean") {
+    if (action === "maintenance") {
+        if (target === "both" || target === "adblocker") {
+            // Nothing for now.
+        }
+
+        if (target === "both" || target === "defender") {
+            await nanoDefenderMaintenance.performMaintenance();
+        }
+    } else if (action === "clean") {
         await del("./dist");
     } else {
         if (target === "both" || target === "adblocker") {
-            await nanoAdblocker.buildCore(action, upstream);
-            await nanoAdblocker.buildFilter(action, upstream);
-            await nanoAdblocker.buildResources(action, upstream);
-            await nanoAdblocker.buildLocale(action, upstream);
+            await nanoAdblocker.buildCore(action);
+            await nanoAdblocker.buildFilter(action);
+            await nanoAdblocker.buildResources(action);
+            await nanoAdblocker.buildLocale(action);
 
             if (pack || publish) {
-                await nanoAdblocker.test(action, upstream);
-                await nanoAdblocker.pack(action, upstream);
+                await nanoAdblocker.test(action);
+                await nanoAdblocker.pack(action);
             }
             if (publish) {
-                await nanoAdblocker.publish(action, upstream);
+                await nanoAdblocker.publish(action);
             }
         }
 
         if (target === "both" || target === "defender") {
             // TODO
             console.error("Nano Defender building is NOT yet implemented");
-        }
-
-        if (target === "ubo") {
-            // TODO
-            console.error("uBlock Origin Edge building is NOT yet implemented");
         }
     }
 })();
