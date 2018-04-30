@@ -401,7 +401,7 @@ exports.publish = async (browser) => {
 
         // The packaging module can break the directory structure
         await del("./dist/nano_adblocker_edge_appx");
-        await del("./dist/Nano");
+        await del("./dist/NanoAdblocker");
         await smartBuild.copyDirectory(
             "./dist/nano_adblocker_" + browser,
             "./dist/nano_adblocker_" + browser + "_appx",

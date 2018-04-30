@@ -7,6 +7,7 @@
  * Load modules.
  * @const {Module}
  */
+const assert = require("assert");
 const data = require("./nano-defender-data.js");
 const fs = require("../lib/promise-fs.js");
 const os = require("os");
