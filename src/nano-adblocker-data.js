@@ -154,6 +154,8 @@ exports.manifest = (browser) => {
         };
         delete manifest.storage;
     } else if (browser === "edge") {
+        // Edge does not care if the size is actually right but do care if the
+        // key name is right
         manifest["-ms-preload"] = {
             "backgroundScript": "js/edgyfy.js",
             "contentScript": "js/edgyfy.js"
@@ -167,8 +169,6 @@ exports.manifest = (browser) => {
                 "browser_action_next_to_addressbar": true
             }
         };
-        // Edge does not care if the size is actually right but do care if the
-        // key name is right
         manifest.icons = {
             "128": "img/128_on.png",
             "16": "img/128_on.png"

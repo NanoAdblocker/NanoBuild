@@ -43,6 +43,12 @@ exports.patchManifest = async (browser) => {
     manifest = JSON.parse(manifest);
 
     if (browser === "firefox") {
+        manifest.applications = {
+            "gecko": {
+                "id": exports.firefox.id,
+                "strict_min_version": "57.0"
+            }
+        };
         manifest.background.scripts = [
             "common.js",
             "platform/firefox-vars.js",
@@ -64,7 +70,15 @@ exports.patchManifest = async (browser) => {
             "content/4-content-debug.js",
             "content/5-ubo-extra.js"
         ];
+        delete manifest.minimum_chrome_version;
     } else if (browser === "edge") {
+        // Edge does not care if the size is actually right but do care if the
+        // key name is right
+        manifest["-ms-preload"] = {
+            "backgroundScript": "js/edgyfy.js",
+            "contentScript": "js/edgyfy.js"
+        };
+        manifest.background.persistent = true;
         manifest.background.scripts = [
             "common.js",
             "platform/edge-vars.js",
@@ -72,6 +86,20 @@ exports.patchManifest = async (browser) => {
             "background/2-background-rules.js",
             "background/3-background-debug.js",
         ];
+        manifest.browser_action.default_icon = {
+            "38": "icon128.png"
+        };
+        manifest.browser_specific_settings = {
+            "edge": {
+                "browser_action_next_to_addressbar": true
+            }
+        };
+        manifest.icons = {
+            "128": "icon128.png",
+            "16": "icon128.png"
+        };
+        delete manifest.minimum_chrome_version;
+        manifest.minimum_edge_version = "41.16299.248.0";
     }
 
     await fs.writeFile(path, JSON.stringify(manifest, null, 2), "utf8");
