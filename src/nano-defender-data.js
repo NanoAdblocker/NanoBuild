@@ -46,7 +46,7 @@ exports.patchManifest = async (browser) => {
         manifest.applications = {
             "gecko": {
                 "id": exports.firefox.id,
-                "strict_min_version": "57.0"
+                "strict_min_version": "58.0"
             }
         };
         manifest.background.scripts = [
@@ -94,6 +94,7 @@ exports.patchManifest = async (browser) => {
                 "browser_action_next_to_addressbar": true
             }
         };
+        manifest.description = "An anti-adblock defuser for Nano Adblocker";
         manifest.icons = {
             "128": "icon128.png",
             "16": "icon128.png"

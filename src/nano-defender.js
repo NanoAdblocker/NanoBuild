@@ -133,7 +133,7 @@ exports.buildList = async () => {
     await buildOne(input + "/6-other.txt", outStream, false);
 
     await new Promise((resolve) => {
-        outStream.end(os.EOL, resolve);
+        outStream.end(resolve);
     });
 };
 /**
