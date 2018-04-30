@@ -163,7 +163,7 @@ exports.buildExtension = async (browser) => {
 
             if (trimmed === "//@pragma-if-debug") {
                 if (inPragmaBlock) {
-                    throw new Error("A @pragma-if-true directive is enclosed in another @pragma-if-* block");
+                    throw new Error("A @pragma-if-debug directive is enclosed in another @pragma-if-* block");
                 }
 
                 inPragmaBlock = true;
@@ -186,8 +186,11 @@ exports.buildExtension = async (browser) => {
 
             if (accepting) {
                 stream.write(line);
-                stream.write(os.EOL);
             }
+        }
+
+        if (inPragmaBlock) {
+            throw new Error("A @pragma-if-* directive does not have a matching @pragma-end-if directive");
         }
 
         await new Promise((resolve) => {
