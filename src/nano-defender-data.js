@@ -52,23 +52,22 @@ exports.patchManifest = async (browser) => {
         manifest.background.scripts = [
             "common.js",
             "platform/firefox-vars.js",
-            "background/1-background-core.js",
+            "background/core.js",
             "platform/chromium-background.js", // This is not a mistake
             "platform/firefox-background.js",
-            "background/2-background-rules.js",
-            "background/3-background-debug.js",
+            "background/rules.js",
+            "background/debug.js"
         ];
         manifest.content_scripts.js = [
             "common.js",
-            "content/1-content-domlib.js",
-            "content/2-content-core.js",
+            "libdom.js",
+            "content/core.js",
             "platform/firefox-content.js",
-            "content/3-content-rules-1-common.js",
-            "content/3-content-rules-2-specific.js",
-            "content/3-content-rules-3-sticky.js",
-            "content/3-content-rules-4-proprietary.js",
-            "content/4-content-debug.js",
-            "content/5-ubo-extra.js"
+            "content/rules-common.js",
+            "content/rules-specific.js",
+            "content/rules-sticky.js",
+            "content/rules-proprietary.js",
+            "content/debug.js"
         ];
         delete manifest.minimum_chrome_version;
     } else if (browser === "edge") {
@@ -82,9 +81,9 @@ exports.patchManifest = async (browser) => {
         manifest.background.scripts = [
             "common.js",
             "platform/edge-vars.js",
-            "background/1-background-core.js",
-            "background/2-background-rules.js",
-            "background/3-background-debug.js",
+            "background/core.js",
+            "background/rules.js",
+            "background/debug.js"
         ];
         manifest.browser_action.default_icon = {
             "38": "icon128.png"
