@@ -193,8 +193,8 @@ exports.buildExtension = async (browser) => {
             }
 
             if (accepting) {
-                stream.write(line);
-                stream.write("\n"); // "\r" is already there if it should be
+                stream.write(line.trimRight());
+                stream.write(os.EOL);
             }
         }
 
