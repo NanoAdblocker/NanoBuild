@@ -25,7 +25,7 @@ exports.performMaintenance = () => {
     console.log("Performing Maintenance for Nano Defender...");
 
     const source = "https://raw.githubusercontent.com/gorhill/uBO-Extra/master/contentscript.js";
-    const output = srcRepo + "/src/content/5-ubo-extra.js";
+    const output = srcRepo + "/src/content/ubo-extra.js";
 
     const stream = fs.createWriteStream(output, {
         flags: "w",
