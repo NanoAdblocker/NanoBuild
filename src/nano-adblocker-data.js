@@ -73,8 +73,9 @@ exports.manifest = (browser) => {
                 "js": [
                     "js/vapi.js",
                     "js/vapi-client.js",
-                    "js/vapi-usercss.pseudo.js",
+                    "js/vapi-usercss.js",
                     "js/vapi-usercss.real.js",
+                    "js/vapi-usercss.pseudo.js",
                     "js/contentscript.js"
                 ],
                 "matches": [
