@@ -154,6 +154,10 @@ exports.buildExtension = async (browser) => {
     await smartBuild.copyDirectory(srcRepo + "/src", outputPath, true, true);
     await data.patchManifest(browser);
 
+    if (browser === "edge") {
+        await smartBuild.copyFile(edgeShim, outputPath + "/edgyfy.js");
+    }
+
     const buildOne = async (file) => {
         let lines = await fs.readFile(file, "utf8");
         lines = lines.split("\n");
@@ -235,10 +239,6 @@ exports.buildExtension = async (browser) => {
     };
 
     await buildDirectory(outputPath);
-
-    if (browser === "edge") {
-        await smartBuild.copyFile(edgeShim, outputPath + "/edgyfy.js");
-    }
 };
 
 /**
