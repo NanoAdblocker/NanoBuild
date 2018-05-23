@@ -66,7 +66,6 @@ exports.patchManifest = async (browser) => {
             "content/rules-common.js",
             "content/rules-specific.js",
             "content/rules-sticky.js",
-            "content/rules-proprietary.js",
             "content/debug.js"
         ];
         delete manifest.minimum_chrome_version;
