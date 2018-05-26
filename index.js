@@ -73,6 +73,7 @@ assert(/[\\/]NanoBuild$/.test(process.cwd()));
                 publish = true;
                 break;
 
+            case "--list-only":
             case "--trace-fs":
                 break;
             default:

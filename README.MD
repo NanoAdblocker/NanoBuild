@@ -44,5 +44,6 @@ node . <action> [<target>] [--upstream] [--pack] [--publish] [--trace-fs]
     --defender      Build Nano Defender
 --pack              Create .zip packages
 --publish           Publish build packages, implicitly apply "--pack"
+--list-only         When building Nano Defender, only build the integration filter list
 --trace-fs          Log file system access, excludes streams and other NPM packages
 ```

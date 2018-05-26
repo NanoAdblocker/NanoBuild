@@ -143,6 +143,10 @@ exports.buildList = async () => {
  * @param {Enum} browser - One of "chromium", "firefox", "edge".
  */
 exports.buildExtension = async (browser) => {
+    if (process.argv.includes("--list-only")) {
+        return;
+    }
+
     console.log("Building Nano Defender...");
     assert(browser === "chromium" || browser === "firefox" || browser === "edge");
 
