@@ -70,8 +70,6 @@ exports.patchManifest = async (browser) => {
         ];
         delete manifest.minimum_chrome_version;
     } else if (browser === "edge") {
-        // Edge does not care if the size is actually right but do care if the
-        // key name is right
         manifest["-ms-preload"] = {
             "backgroundScript": "edgyfy.js",
             "contentScript": "edgyfy.js"
@@ -84,6 +82,8 @@ exports.patchManifest = async (browser) => {
             "background/rules.js",
             "background/debug.js"
         ];
+        // Edge does not care if the size is actually right but do care if the
+        // key name is right
         manifest.browser_action.default_icon = {
             "38": "icon128.png"
         };
