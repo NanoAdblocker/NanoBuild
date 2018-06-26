@@ -61,9 +61,7 @@ exports.buildCore = async (browser) => {
     );
 
     if (browser === "firefox") {
-        await Promise.all([
-            smartBuild.copyDirectory(srcRepo + "/platform/firefox", outputPath + "/js", false, true),
-        ]);
+        await smartBuild.copyDirectory(srcRepo + "/platform/firefox", outputPath + "/js", false, true);
         // TODO: uBO concat vapi-usercss.js vapi-usercss.real.js into contentscript.js and eliminate them.
         await del(outputPath + "/js/vapi-usercss.pseudo.js");
         await del(outputPath + "/options_ui.html");
