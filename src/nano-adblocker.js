@@ -61,7 +61,12 @@ exports.buildCore = async (browser) => {
     );
 
     if (browser === "firefox") {
-        await smartBuild.copyDirectory(srcRepo + "/platform/webext", outputPath + "/js", false, true);
+        await smartBuild.copyDirectory(srcRepo + "/platform/firefox", outputPath + "/js", false, true);
+        // TODO: uBO concat vapi-usercss.js vapi-usercss.real.js into contentscript.js and eliminate them.
+        await del(outputPath + "/js/vapi-usercss.pseudo.js");
+        await del(outputPath + "/options_ui.html");
+        await del(outputPath + "/js/options_ui.js");
+
     } else if (browser === "edge") {
         await Promise.all([
             smartBuild.copyDirectory(srcRepo + "/platform/edge", outputPath + "/js", false, true),
@@ -321,6 +326,8 @@ exports.buildLocale = async (browser) => {
                 result[key].message = result[key].message.replace("Nano", "uBlock Origin");
             }
             if (key === "aboutBasedOn") {
+                // Modded 2018-06-21, Firefox always have UserCSS enabled, modded based on message here.
+                data.basedOn = data.basedOn.replace((browser === "firefox" ? " UserCSS/disabled" : ""), "");
                 result[key].message = result[key].message.replace("{{@data}}", data.basedOn);
             }
         }
