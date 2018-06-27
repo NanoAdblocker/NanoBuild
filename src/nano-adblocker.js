@@ -61,7 +61,7 @@ exports.buildCore = async (browser) => {
     );
 
     if (browser === "firefox") {
-        await smartBuild.copyDirectory(srcRepo + "/platform/webext", outputPath + "/js", false, true);
+        await smartBuild.copyDirectory(srcRepo + "/platform/firefox", outputPath + "/js", false, true);
     } else if (browser === "edge") {
         await Promise.all([
             smartBuild.copyDirectory(srcRepo + "/platform/edge", outputPath + "/js", false, true),
@@ -321,7 +321,11 @@ exports.buildLocale = async (browser) => {
                 result[key].message = result[key].message.replace("Nano", "uBlock Origin");
             }
             if (key === "aboutBasedOn") {
-                result[key].message = result[key].message.replace("{{@data}}", data.basedOn);
+                let basedOn = data.basedOn;
+                if (browser === "firefox") {
+                    basedOn = basedOn.replace(" UserCSS/disabled", "");
+                }
+                result[key].message = result[key].message.replace("{{@data}}", basedOn);
             }
         }
 

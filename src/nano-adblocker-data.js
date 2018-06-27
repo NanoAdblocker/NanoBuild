@@ -139,20 +139,38 @@ exports.manifest = (browser) => {
                 "strict_min_version": "52.0"
             }
         };
+        manifest.browser_action.browser_style = false;
+        manifest.content_scripts[0].js = [
+            "js/vapi.js",
+            "js/vapi-client.js",
+            "js/vapi-usercss.js",
+            "js/vapi-usercss.real.js",
+            "js/contentscript.js"
+        ];
+        manifest.content_scripts[0].matches = [
+            "http://*/*",
+            "https://*/*",
+            "file://*/*"
+        ];
         manifest.incognito = "spanning";
         delete manifest.minimum_chrome_version;
+        delete manifest.optional_permissions;
         delete manifest.options_page;
         manifest.options_ui = {
             "open_in_tab": true,
-            "page": "dashboard.html"
+            "page": "dashboard.html",
+            "browser_style": true
         };
-        manifest.sidebar_action = {
-            "default_icon": {
-                "128": "img/128_on.png"
-            },
-            "default_panel": "logger-ui.html",
-            "default_title": "__MSG_statsPageName__"
-        };
+        manifest.permissions = [
+            "contextMenus",
+            "privacy",
+            "storage",
+            "tabs",
+            "webNavigation",
+            "webRequest",
+            "webRequestBlocking",
+            "<all_urls>"
+        ];
         delete manifest.storage;
     } else if (browser === "edge") {
         // Edge does not care if the size is actually right but do care if the
