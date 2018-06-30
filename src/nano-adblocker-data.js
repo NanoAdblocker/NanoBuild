@@ -13,12 +13,12 @@ const assert = require("assert");
  * The version number.
  * @const {string}
  */
-exports.version = "1.0.0.54";
+exports.version = "1.0.0.55";
 /**
  * The based on string.
  * @const {string}
  */
-exports.basedOn = "uBlock Origin Version/1.16.11rc0 Commit/847f146 UserCSS/disabled";
+exports.basedOn = "uBlock Origin Version/1.16.12 Commit/3093846 UserCSS/disabled";
 
 /**
  * Extra information specific to Chromium.
