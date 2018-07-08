@@ -99,6 +99,10 @@ exports.patchManifest = async (browser) => {
         };
         delete manifest.minimum_chrome_version;
         manifest.minimum_edge_version = "41.16299.248.0";
+        {
+            const i = manifest.version.indexOf(".");
+            manifest.version = manifest.version.substring(i + 1) + ".0";
+        }
     }
 
     await fs.writeFile(path, JSON.stringify(manifest, null, 2), "utf8");
