@@ -53,7 +53,6 @@ exports.patchManifest = async (browser) => {
             "common.js",
             "platform/firefox-vars.js",
             "background/core.js",
-            "platform/chromium-background.js", // This is not a mistake
             "platform/firefox-background.js",
             "background/rules.js",
             "background/debug.js"
