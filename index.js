@@ -93,11 +93,6 @@ assert(/[\\/]NanoBuild$/.test(process.cwd()));
         publish = false;
     }
 
-    // https://nvd.nist.gov/vuln/detail/CVE-2018-3728
-    if (action === "firefox" && publish) {
-        throw new Error("This Functionality is Disabled Due to CVE-2018-3728");
-    }
-
     if (action === "maintenance") {
         if (target === "both" || target === "adblocker") {
             console.log("No Maintenance Needed for Nano Adblocker.");
