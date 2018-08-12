@@ -67,6 +67,8 @@ exports.patchManifest = async (browser) => {
             "content/rules-sticky.js",
             "content/debug.js"
         ];
+        // TODO: Remove when Firefox properly support split mode
+        manifest.incognito = "spanning";
         delete manifest.minimum_chrome_version;
     } else if (browser === "edge") {
         manifest["-ms-preload"] = {
