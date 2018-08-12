@@ -106,6 +106,8 @@ exports.patchManifest = async (browser) => {
             "128": "icon128.png",
             "16": "icon128.png"
         };
+        // TODO: Remove when Edge properly support split mode
+        manifest.incognito = "spanning";
         delete manifest.minimum_chrome_version;
         manifest.minimum_edge_version = "41.16299.248.0";
         {
