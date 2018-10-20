@@ -46,7 +46,7 @@ exports.patchManifest = async (browser) => {
         manifest.applications = {
             "gecko": {
                 "id": exports.firefox.id,
-                "strict_min_version": "58.0"
+                "strict_min_version": "60.0"
             }
         };
         manifest.background.scripts = [
