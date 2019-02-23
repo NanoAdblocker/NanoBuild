@@ -7,7 +7,7 @@ NODE . --chromium --defender --pack --publish
 
 REM NODE . --edge --defender --pack --publish
 NODE . --edge --defender --pack
-ECHO "Publishing for Edge is disabled"
+ECHO Publishing for Edge is disabled
 
 :END
 PAUSE
