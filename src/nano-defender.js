@@ -99,7 +99,7 @@ exports.buildList = async () => {
                 console.warn("Unrecognized directive: " + line.substring(1));
             }
 
-            if (removeComments && line.charAt(0) === '!') {
+            if (removeComments && (line.charAt(0) === '!' || line.startsWith("# "))) {
                 if (keepNextComment) {
                     keepNextComment = false;
                 } else {
