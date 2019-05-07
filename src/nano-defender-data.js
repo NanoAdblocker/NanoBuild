@@ -43,7 +43,7 @@ exports.patchManifest = async (browser) => {
     manifest = JSON.parse(manifest);
 
     if (browser === "firefox") {
-        manifest.applications = {
+        manifest.browser_specific_settings = {
             "gecko": {
                 "id": exports.firefox.id,
                 "strict_min_version": "60.0"
