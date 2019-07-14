@@ -4,15 +4,15 @@
     "url": "https://github.com/NanoAdblocker/NanoBuild/issues"
   },
   "dependencies": {
-    "archiver": "~2.1.1",
-    "del": "~3.0.0",
-    "esprima": "~4.0.1",
-    "node-forge": "~0.7.5",
-    "sign-addon": "~0.3.1"
+    "archiver": "^2.1.1",
+    "del": "^3.0.0",
+    "esprima": "^4.0.1",
+    "node-forge": "^0.7.5",
+    "sign-addon": "^0.3.1"
   },
   "description": "Centralized build engine",
   "engines": {
-    "node": ">=9.4.0"
+    "node": "^10.16.0"
   },
   "homepage": "https://github.com/NanoAdblocker/NanoBuild",
   "license": "GPL-3.0",
