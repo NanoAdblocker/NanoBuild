@@ -12,7 +12,7 @@
   },
   "description": "Centralized build engine",
   "engines": {
-    "node": "^10.16.0"
+    "node": "10.16.0"
   },
   "homepage": "https://github.com/NanoAdblocker/NanoBuild",
   "license": "GPL-3.0",
