@@ -29,7 +29,6 @@ exports.firefox = {
  * Patch manifest.
  * @async @function
  * @param {Enum} browser - One of "chromium", "firefox", "edge".
- * @return {string} The manifest
  */
 exports.patchManifest = async (browser) => {
     assert(browser === "chromium" || browser === "firefox" || browser === "edge");

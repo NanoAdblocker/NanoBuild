@@ -213,7 +213,7 @@ exports.buildExtension = async (browser) => {
         await new Promise((resolve) => {
             stream.end(resolve);
         });
-    }
+    };
     const buildDirectory = async (directory) => {
         const files = await fs.readdir(directory);
 
