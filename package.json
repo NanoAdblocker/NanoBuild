@@ -4,7 +4,7 @@
     "url": "https://github.com/NanoAdblocker/NanoBuild/issues"
   },
   "dependencies": {
-    "archiver": "3.0.0",
+    "archiver": "3.0.3",
     "del": "5.0.0",
     "esprima": "4.0.1",
     "node-forge": "0.8.5",
@@ -19,5 +19,5 @@
   "name": "nano-build",
   "private": true,
   "repository": "https://github.com/NanoAdblocker/NanoBuild",
-  "version": "1.0.1"
+  "version": "1.0.2"
 }
