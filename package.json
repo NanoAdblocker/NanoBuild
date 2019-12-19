@@ -8,7 +8,7 @@
     "del": "5.1.0",
     "esprima": "4.0.1",
     "node-forge": "0.9.1",
-    "sign-addon": "2.0.3"
+    "sign-addon": "2.0.4"
   },
   "description": "Centralized build engine",
   "engines": {
@@ -19,5 +19,5 @@
   "name": "nano-build",
   "private": true,
   "repository": "https://github.com/NanoAdblocker/NanoBuild",
-  "version": "1.0.16"
+  "version": "1.0.17"
 }
