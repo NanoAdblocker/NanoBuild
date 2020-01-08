@@ -159,7 +159,7 @@ exports.buildExtension = async (browser, capability) => {
     await smartBuild.createDirectory(outputPath);
 
     await smartBuild.copyDirectory(srcRepo + "/src", outputPath, true, true);
-    await data.patchManifest(browser);
+    await data.patchManifest(browser, capability);
 
     if (browser === "edge") {
         await smartBuild.copyFile(edgeShim, outputPath + "/edgyfy.js");
@@ -301,7 +301,7 @@ exports.publish = async (browser, capability) => {
     assert(browser === "chromium" || browser === "firefox" || browser === "edge");
     assert(capability === "standard"); // Pro version cannot be published
 
-    const inputPath = "./dist/nano_defender_" + browser + ".zip";
+    const inputPath = "./dist/nano_defender_" + browser + "_" + capability + ".zip";
 
     if (browser === "chromium") {
         await webStore.publish(inputPath, data.chromium.id);
@@ -316,15 +316,15 @@ exports.publish = async (browser, capability) => {
         await del("./dist/nano_defender_edge_appx");
         await del("./dist/NanoDefender");
         await smartBuild.copyDirectory(
-            "./dist/nano_defender_" + browser,
-            "./dist/nano_defender_" + browser + "_appx",
+            "./dist/nano_defender_" + browser + "_" + capability,
+            "./dist/nano_defender_" + browser + "_" + capability + "_appx",
         );
 
         await packEdge.packDefender(
             fs, childProcess,
             "../NanoCore/platform/edge/package-img",
             "./dist",
-            "./nano_defender_" + browser + "_appx",
+            "./nano_defender_" + browser + "_" + capability + "_appx",
         );
 
         console.warn(".appx package created, automatic upload is NOT yet implemented");

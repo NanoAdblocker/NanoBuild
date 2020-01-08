@@ -28,16 +28,14 @@ exports.firefox = {
 /**
  * Patch manifest.
  * @async @function
- * @param {Enum} browser - One of "chromium", "firefox", "edge".
+ * @param {Enum} browser    - One of "chromium", "firefox", "edge".
+ * @param {Enum} capability - One of "standard", "pro".
  */
-exports.patchManifest = async (browser) => {
+exports.patchManifest = async (browser, capability) => {
     assert(browser === "chromium" || browser === "firefox" || browser === "edge");
+    assert(capability === "standard" || capability === "pro");
 
-    if (browser === "chromium") {
-        return;
-    }
-
-    const path = "./dist/nano_defender_" + browser + "/manifest.json";
+    const path = "./dist/nano_defender_" + browser + "_" + capability + "/manifest.json";
     let manifest = await fs.readFile(path, "utf8");
     manifest = JSON.parse(manifest);
 
@@ -115,6 +113,11 @@ exports.patchManifest = async (browser) => {
             const i = manifest.version.indexOf(".");
             manifest.version = manifest.version.substring(i + 1) + ".0";
         }
+    }
+
+    if (capability === "pro") {
+        manifest.browser_action.default_title += " Pro";
+        manifest.name += " Pro";
     }
 
     await fs.writeFile(path, JSON.stringify(manifest, null, 2), "utf8");
