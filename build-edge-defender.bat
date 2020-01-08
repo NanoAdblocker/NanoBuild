@@ -1,5 +1,5 @@
 @ECHO OFF
 
-NODE . --edge --defender
+NODE . --edge --defender --pro
 
 PAUSE

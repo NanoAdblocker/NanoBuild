@@ -5,9 +5,10 @@ IF "%CONFIRM%" NEQ "Y" GOTO END
 
 NODE . --chromium --defender --pack --publish
 
-REM NODE . --edge --defender --pack --publish
-NODE . --edge --defender --pack
-ECHO Publishing for Edge is disabled
+REM Pro version cannot be published
+NODE . --chromium --defender --pro --pack
+
+REM NODE . --edge --defender --pro --pack --publish
 
 :END
 PAUSE

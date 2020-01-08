@@ -26,6 +26,7 @@ assert(/[\\/]NanoBuild$/.test(process.cwd()));
     let target = null;
     let pack = null;
     let publish = null;
+    let capability = "standard";
 
     const argv = process.argv.slice(2);
     for (const arg of argv) {
@@ -62,6 +63,11 @@ assert(/[\\/]NanoBuild$/.test(process.cwd()));
             case "--defender":
                 assert(target === null);
                 target = "defender";
+                break;
+
+            case "--pro":
+                assert(capability === "standard");
+                capability = "pro";
                 break;
 
             case "--pack":
@@ -121,15 +127,15 @@ assert(/[\\/]NanoBuild$/.test(process.cwd()));
         }
 
         if (target === "both" || target === "defender") {
-            await nanoDefender.buildList(action);
-            await nanoDefender.buildExtension(action);
+            await nanoDefender.buildList(action, capability);
+            await nanoDefender.buildExtension(action, capability);
 
             if (pack || publish) {
-                await nanoDefender.test(action);
-                await nanoDefender.pack(action);
+                await nanoDefender.test(action, capability);
+                await nanoDefender.pack(action, capability);
             }
             if (publish) {
-                await nanoDefender.publish(action);
+                await nanoDefender.publish(action, capability);
             }
         }
 
