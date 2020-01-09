@@ -115,9 +115,14 @@ exports.patchManifest = async (browser, capability) => {
         }
     }
 
+    assert(manifest.browser_action.default_title === "Nano Defender Debug");
+    assert(manifest.name === "Nano Defender Debug");
     if (capability === "pro") {
-        manifest.browser_action.default_title += " Pro";
-        manifest.name += " Pro";
+        manifest.browser_action.default_title = "Nano Defender Pro";
+        manifest.name = "Nano Defender Pro";
+    } else {
+        manifest.browser_action.default_title = "Nano Defender";
+        manifest.name = "Nano Defender";
     }
 
     await fs.writeFile(path, JSON.stringify(manifest, null, 2), "utf8");
